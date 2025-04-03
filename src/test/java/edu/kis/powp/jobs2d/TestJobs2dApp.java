@@ -10,113 +10,118 @@ import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.appbase.Application;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindow;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver;
+import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.events.SelectLoadSecretCommandOptionListener;
 import edu.kis.powp.jobs2d.events.SelectRunCurrentCommandOptionListener;
 import edu.kis.powp.jobs2d.events.SelectTestFigure2OptionListener;
 import edu.kis.powp.jobs2d.events.SelectTestFigureOptionListener;
+import edu.kis.powp.jobs2d.features.ClicksConverter;
 import edu.kis.powp.jobs2d.features.CommandsFeature;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 import edu.kis.powp.jobs2d.features.DriverFeature;
 
 public class TestJobs2dApp {
-	private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-	/**
-	 * Setup test concerning preset figures in context.
-	 * 
-	 * @param application Application context.
-	 */
-	private static void setupPresetTests(Application application) {
-		SelectTestFigureOptionListener selectTestFigureOptionListener = new SelectTestFigureOptionListener(
-				DriverFeature.getDriverManager());
-		SelectTestFigure2OptionListener selectTestFigure2OptionListener = new SelectTestFigure2OptionListener(
-				DriverFeature.getDriverManager());
+    /**
+     * Setup test concerning preset figures in context.
+     *
+     * @param application Application context.
+     */
+    private static void setupPresetTests(Application application) {
+        SelectTestFigureOptionListener selectTestFigureOptionListener = new SelectTestFigureOptionListener(
+                DriverFeature.getDriverManager());
+        SelectTestFigure2OptionListener selectTestFigure2OptionListener = new SelectTestFigure2OptionListener(
+                DriverFeature.getDriverManager());
 
-		application.addTest("Figure Joe 1", selectTestFigureOptionListener);
-		application.addTest("Figure Joe 2", selectTestFigure2OptionListener);
-	}
+        application.addTest("Figure Joe 1", selectTestFigureOptionListener);
+        application.addTest("Figure Joe 2", selectTestFigure2OptionListener);
+    }
 
-	/**
-	 * Setup test using driver commands in context.
-	 * 
-	 * @param application Application context.
-	 */
-	private static void setupCommandTests(Application application) {
-		application.addTest("Load secret command", new SelectLoadSecretCommandOptionListener());
+    /**
+     * Setup test using driver commands in context.
+     *
+     * @param application Application context.
+     */
+    private static void setupCommandTests(Application application) {
+        application.addTest("Load secret command", new SelectLoadSecretCommandOptionListener());
+        application.addTest("Run command", new SelectRunCurrentCommandOptionListener(DriverFeature.getDriverManager()));
+    }
 
-		application.addTest("Run command", new SelectRunCurrentCommandOptionListener(DriverFeature.getDriverManager()));
+    /**
+     * Setup driver manager, and set default Job2dDriver for application.
+     *
+     * @param application Application context.
+     */
+    private static void setupDrivers(Application application) {
+        Job2dDriver loggerDriver = new InformativeLoggerDriver();
+        DriverFeature.addDriver("Logger driver", loggerDriver);
 
-	}
+        DrawPanelController drawerController = DrawerFeature.getDrawerController();
+        Job2dDriver driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
+        DriverFeature.addDriver("Line Simulator", driver);
+        DriverFeature.getDriverManager().setCurrentDriver(driver);
 
-	/**
-	 * Setup driver manager, and set default Job2dDriver for application.
-	 * 
-	 * @param application Application context.
-	 */
-	private static void setupDrivers(Application application) {
-		Job2dDriver loggerDriver = new LoggerDriver();
-		DriverFeature.addDriver("Logger driver", loggerDriver);
+        driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
+        DriverFeature.addDriver("Special line Simulator", driver);
+        DriverFeature.updateDriverInfo();
+    }
 
-		DrawPanelController drawerController = DrawerFeature.getDrawerController();
-		Job2dDriver driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
-		DriverFeature.addDriver("Line Simulator", driver);
-		DriverFeature.getDriverManager().setCurrentDriver(driver);
+    private static void setupWindows(Application application) {
 
-		driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
-		DriverFeature.addDriver("Special line Simulator", driver);
-		DriverFeature.updateDriverInfo();
-	}
+        CommandManagerWindow commandManager = new CommandManagerWindow(CommandsFeature.getDriverCommandManager());
+        application.addWindowComponent("Command Manager", commandManager);
 
-	private static void setupWindows(Application application) {
+        CommandManagerWindowCommandChangeObserver windowObserver = new CommandManagerWindowCommandChangeObserver(
+                commandManager);
+        CommandsFeature.getDriverCommandManager().getChangePublisher().addSubscriber(windowObserver);
+    }
 
-		CommandManagerWindow commandManager = new CommandManagerWindow(CommandsFeature.getDriverCommandManager());
-		application.addWindowComponent("Command Manager", commandManager);
+    /**
+     * Setup menu for adjusting logging settings.
+     *
+     * @param application Application context.
+     */
+    private static void setupLogger(Application application) {
 
-		CommandManagerWindowCommandChangeObserver windowObserver = new CommandManagerWindowCommandChangeObserver(
-				commandManager);
-		CommandsFeature.getDriverCommandManager().getChangePublisher().addSubscriber(windowObserver);
-	}
+        application.addComponentMenu(Logger.class, "Logger", 0);
+        application.addComponentMenuElement(Logger.class, "Clear log",
+                (ActionEvent e) -> application.flushLoggerOutput());
+        application.addComponentMenuElement(Logger.class, "Fine level", (ActionEvent e) -> logger.setLevel(Level.FINE));
+        application.addComponentMenuElement(Logger.class, "Info level", (ActionEvent e) -> logger.setLevel(Level.INFO));
+        application.addComponentMenuElement(Logger.class, "Warning level",
+                (ActionEvent e) -> logger.setLevel(Level.WARNING));
+        application.addComponentMenuElement(Logger.class, "Severe level",
+                (ActionEvent e) -> logger.setLevel(Level.SEVERE));
+        application.addComponentMenuElement(Logger.class, "OFF logging", (ActionEvent e) -> logger.setLevel(Level.OFF));
+    }
 
-	/**
-	 * Setup menu for adjusting logging settings.
-	 * 
-	 * @param application Application context.
-	 */
-	private static void setupLogger(Application application) {
+    private static void setupMouseHandler(Application application) {
+        new ClicksConverter(application.getFreePanel());
+    }
 
-		application.addComponentMenu(Logger.class, "Logger", 0);
-		application.addComponentMenuElement(Logger.class, "Clear log",
-				(ActionEvent e) -> application.flushLoggerOutput());
-		application.addComponentMenuElement(Logger.class, "Fine level", (ActionEvent e) -> logger.setLevel(Level.FINE));
-		application.addComponentMenuElement(Logger.class, "Info level", (ActionEvent e) -> logger.setLevel(Level.INFO));
-		application.addComponentMenuElement(Logger.class, "Warning level",
-				(ActionEvent e) -> logger.setLevel(Level.WARNING));
-		application.addComponentMenuElement(Logger.class, "Severe level",
-				(ActionEvent e) -> logger.setLevel(Level.SEVERE));
-		application.addComponentMenuElement(Logger.class, "OFF logging", (ActionEvent e) -> logger.setLevel(Level.OFF));
-	}
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                Application app = new Application("Jobs 2D");
+                DrawerFeature.setupDrawerPlugin(app);
+                CommandsFeature.setupCommandManager();
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				Application app = new Application("Jobs 2D");
-				DrawerFeature.setupDrawerPlugin(app);
-				CommandsFeature.setupCommandManager();
+                DriverFeature.setupDriverPlugin(app);
+                setupDrivers(app);
+                setupPresetTests(app);
+                setupCommandTests(app);
+                setupLogger(app);
+                setupWindows(app);
+                setupMouseHandler(app);
 
-				DriverFeature.setupDriverPlugin(app);
-				setupDrivers(app);
-				setupPresetTests(app);
-				setupCommandTests(app);
-				setupLogger(app);
-				setupWindows(app);
-
-				app.setVisibility(true);
-			}
-		});
-	}
+                app.setVisibility(true);
+            }
+        });
+    }
 
 }
