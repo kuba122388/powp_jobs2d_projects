@@ -17,16 +17,16 @@ public class ComplexDriver implements Job2dDriver {
     }
 
     @Override
-    public void setPosition(int i, int i1) {
+    public void setPosition(int x, int y) {
         for(Job2dDriver child : children){
-            child.setPosition(i, i1);
+            child.setPosition(x, y);
         }
     }
 
     @Override
-    public void operateTo(int i, int i1) {
+    public void operateTo(int x, int y) {
         for(Job2dDriver child : children){
-            child.operateTo(i, i1);
+            child.operateTo(x, y);
         }
     }
 }
