@@ -17,6 +17,34 @@ public class ComplexCommand implements ICompoundCommand {
         this.commandList.add(command);
     }
 
+    public void addCommand(int index, DriverCommand command){
+        this.commandList.add(index, command);
+    }
+
+    public void removeCommand(int index){
+        this.commandList.remove(index);
+    }
+
+    public void removeLastCommand(){
+        this.commandList.remove(this.commandList.size()-1);
+    }
+
+    public void setCommand(int index, DriverCommand command){
+        this.commandList.set(index, command);
+    }
+
+    public void clear(){
+        this.commandList.clear();
+    }
+
+    public boolean isEmpty(){
+        return this.commandList.isEmpty();
+    }
+
+    public int size(){
+        return this.commandList.size();
+    }
+
     @Override
     public void execute(Job2dDriver driver){
         while (this.iterator().hasNext()){
