@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Implementation of Job2dDriverCommand for operateTo command functionality.
+ * Implementation of ICompoundCommand for running multiple commands.
  */
 public class ComplexCommand implements ICompoundCommand {
 
