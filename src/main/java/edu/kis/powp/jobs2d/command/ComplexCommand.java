@@ -28,4 +28,14 @@ public class ComplexCommand implements ICompoundCommand {
     public Iterator<DriverCommand> iterator() {
         return commandList.iterator();
     }
+
+    @Override
+    public DriverCommand copy() {
+        ComplexCommand newComplexCommand = new ComplexCommand();
+        while (this.iterator().hasNext()) {
+            newComplexCommand.addCommand(this.iterator().next().copy());
+        }
+        return newComplexCommand;
+    }
+
 }
