@@ -1,9 +1,9 @@
 package edu.kis.powp.jobs2d.transformations;
 
-public class rotateTransformation implements Transformation {
+public class RotateTransformation implements Transformation {
     private final double cos, sin;
 
-    public rotateTransformation(double degrees) {
+    public RotateTransformation(double degrees) {
         double radians = Math.toRadians(degrees);
         this.cos = Math.cos(radians);
         this.sin = Math.sin(radians);

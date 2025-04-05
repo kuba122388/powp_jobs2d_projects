@@ -20,7 +20,9 @@ import edu.kis.powp.jobs2d.events.SelectTestFigureOptionListener;
 import edu.kis.powp.jobs2d.features.CommandsFeature;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 import edu.kis.powp.jobs2d.features.DriverFeature;
-import edu.kis.powp.jobs2d.transformations.rotateTransformation;
+import edu.kis.powp.jobs2d.transformations.FlipTransformation;
+import edu.kis.powp.jobs2d.transformations.RotateTransformation;
+import edu.kis.powp.jobs2d.transformations.ScaleTransformation;
 
 public class TestJobs2dApp {
     private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -71,8 +73,23 @@ public class TestJobs2dApp {
         DriverFeature.updateDriverInfo();
 
         TransformationDriver rotatedDriver = new TransformationDriver(drawerController);
-        rotatedDriver.addTransformation(new rotateTransformation(45));
+        rotatedDriver.addTransformation(new RotateTransformation(45));
         DriverFeature.addDriver("Rotated driver", rotatedDriver);
+
+        TransformationDriver flipDriverHorizontal = new TransformationDriver(drawerController);
+        flipDriverHorizontal.addTransformation(new FlipTransformation(true,false));
+        DriverFeature.addDriver("Flip driver Horizontal",flipDriverHorizontal);
+
+        TransformationDriver flipDriverVertical = new TransformationDriver(drawerController);
+        flipDriverVertical.addTransformation(new FlipTransformation(false,true));
+        DriverFeature.addDriver("Flip driver Vertical",flipDriverVertical);
+
+        TransformationDriver scaleDriver= new TransformationDriver(drawerController);
+        scaleDriver.addTransformation(new ScaleTransformation(0.2,0.8));
+        DriverFeature.addDriver("Scale driver",scaleDriver);
+
+
+
     }
 
     private static void setupWindows(Application application) {
