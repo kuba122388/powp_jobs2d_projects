@@ -51,6 +51,9 @@ public class DriverCommandManager {
             public String toString() {
                 return name;
             }
+
+            @Override
+            public DriverCommand copy() {return this;}
         });
 
     }
