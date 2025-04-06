@@ -60,8 +60,9 @@ public class ComplexCommand implements ICompoundCommand {
     @Override
     public DriverCommand copy() {
         ComplexCommand newComplexCommand = new ComplexCommand();
-        while (this.iterator().hasNext()) {
-            newComplexCommand.addCommand(this.iterator().next().copy());
+        Iterator<DriverCommand> iterator = this.iterator();
+        while (iterator.hasNext()) {
+            newComplexCommand.addCommand(iterator.next().copy());
         }
         return newComplexCommand;
     }
