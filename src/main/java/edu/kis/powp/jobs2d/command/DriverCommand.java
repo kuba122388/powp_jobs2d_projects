@@ -14,4 +14,5 @@ public interface DriverCommand {
      */
     void execute(Job2dDriver driver);
     DriverCommand copy();
+    boolean equals(Object o);
 }

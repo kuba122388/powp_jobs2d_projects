@@ -66,4 +66,13 @@ public class ComplexCommand implements ICompoundCommand {
         return newComplexCommand;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        ComplexCommand second = (ComplexCommand) obj;
+
+        return commandList.equals(second.commandList);
+    }
 }
