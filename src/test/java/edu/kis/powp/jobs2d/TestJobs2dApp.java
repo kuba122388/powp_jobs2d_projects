@@ -11,7 +11,6 @@ import edu.kis.powp.appbase.Application;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindow;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver;
 import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
-import edu.kis.powp.jobs2d.drivers.TransformationDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.events.SelectLoadSecretCommandOptionListener;
 import edu.kis.powp.jobs2d.events.SelectRunCurrentCommandOptionListener;
@@ -20,9 +19,9 @@ import edu.kis.powp.jobs2d.events.SelectTestFigureOptionListener;
 import edu.kis.powp.jobs2d.features.CommandsFeature;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 import edu.kis.powp.jobs2d.features.DriverFeature;
-import edu.kis.powp.jobs2d.transformations.FlipTransformation;
-import edu.kis.powp.jobs2d.transformations.RotateTransformation;
-import edu.kis.powp.jobs2d.transformations.ScaleTransformation;
+import edu.kis.powp.jobs2d.transformations.FlipTransformationDecorator;
+import edu.kis.powp.jobs2d.transformations.RotateTransformationDecorator;
+import edu.kis.powp.jobs2d.transformations.ScaleTransformationDecorator;
 
 public class TestJobs2dApp {
     private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -72,24 +71,17 @@ public class TestJobs2dApp {
         DriverFeature.addDriver("Special line Simulator", driver);
         DriverFeature.updateDriverInfo();
 
-        TransformationDriver rotatedDriver = new TransformationDriver(drawerController);
-        rotatedDriver.addTransformation(new RotateTransformation(45));
-        DriverFeature.addDriver("Rotated driver", rotatedDriver);
+        driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "special");
+        driver = new RotateTransformationDecorator(driver,45);
+        driver = new FlipTransformationDecorator(driver,true,false);
+        DriverFeature.addDriver("Rotated and flipped horizontally line Simulator", driver);
+        DriverFeature.updateDriverInfo();
 
-        TransformationDriver flipDriverHorizontal = new TransformationDriver(drawerController);
-        flipDriverHorizontal.addTransformation(new FlipTransformation(true,false));
-        DriverFeature.addDriver("Flip driver Horizontal",flipDriverHorizontal);
-
-        TransformationDriver flipDriverVertical = new TransformationDriver(drawerController);
-        flipDriverVertical.addTransformation(new FlipTransformation(false,true));
-        DriverFeature.addDriver("Flip driver Vertical",flipDriverVertical);
-
-        TransformationDriver scaleDriver= new TransformationDriver(drawerController);
-        scaleDriver.addTransformation(new ScaleTransformation(0.2,0.8));
-        DriverFeature.addDriver("Scale driver",scaleDriver);
-
-
-
+        driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
+        driver = new ScaleTransformationDecorator(driver,2,2);
+        driver = new FlipTransformationDecorator(driver,false,true);
+        DriverFeature.addDriver("Scaled and flipped vertically special line Simulator", driver);
+        DriverFeature.updateDriverInfo();
     }
 
     private static void setupWindows(Application application) {
