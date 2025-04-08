@@ -72,16 +72,16 @@ public class TestJobs2dApp {
         DriverFeature.addDriver("Special line Simulator", driver);
         DriverFeature.updateDriverInfo();
 
-        TransformationDriver rotatedDriver = new RotateTransformationDriver(drawerController,45);
+        TransformationDriver rotatedDriver = new RotateTransformationDriver( DrawerFeature.getDrawerController(),45);
         DriverFeature.addDriver("Rotated driver", rotatedDriver);
 
-        TransformationDriver flipDriverHorizontal = new FlipTransformationDriver(drawerController,true,false);
+        TransformationDriver flipDriverHorizontal = new FlipTransformationDriver( DrawerFeature.getDrawerController(),true,false);
         DriverFeature.addDriver("Flip driver Horizontal",flipDriverHorizontal);
 
-        TransformationDriver flipDriverVertical = new FlipTransformationDriver(drawerController,false,true);
+        TransformationDriver flipDriverVertical = new FlipTransformationDriver( DrawerFeature.getDrawerController(),false,true);
         DriverFeature.addDriver("Flip driver Vertical",flipDriverVertical);
 
-        TransformationDriver scaleDriver= new ScaleTransformationDriver(drawerController,0.2,0.8);
+        TransformationDriver scaleDriver= new ScaleTransformationDriver( DrawerFeature.getDrawerController(),0.2,0.8);
         DriverFeature.addDriver("Scale driver",scaleDriver);
 
 
