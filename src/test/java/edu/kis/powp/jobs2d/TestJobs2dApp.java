@@ -70,19 +70,16 @@ public class TestJobs2dApp {
 
         driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
         DriverFeature.addDriver("Special line Simulator", driver);
-        DriverFeature.updateDriverInfo();
 
         driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "special");
         driver = new RotateTransformationDecorator(driver,45);
         driver = new FlipTransformationDecorator(driver,true,false);
         DriverFeature.addDriver("Rotated and flipped horizontally line Simulator", driver);
-        DriverFeature.updateDriverInfo();
 
         driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
         driver = new ScaleTransformationDecorator(driver,2,2);
         driver = new FlipTransformationDecorator(driver,false,true);
         DriverFeature.addDriver("Scaled and flipped vertically special line Simulator", driver);
-        DriverFeature.updateDriverInfo();
     }
 
     private static void setupWindows(Application application) {
