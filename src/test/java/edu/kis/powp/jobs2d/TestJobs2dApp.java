@@ -13,14 +13,14 @@ import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver
 import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.drivers.canva.MyCanva;
+import edu.kis.powp.jobs2d.drivers.canva.shapes.CircularBoundary;
+import edu.kis.powp.jobs2d.drivers.canva.shapes.RectangleBoundary;
+import edu.kis.powp.jobs2d.drivers.canva.shapes.ShapeBoundary;
 import edu.kis.powp.jobs2d.events.SelectLoadSecretCommandOptionListener;
 import edu.kis.powp.jobs2d.events.SelectRunCurrentCommandOptionListener;
 import edu.kis.powp.jobs2d.events.SelectTestFigure2OptionListener;
 import edu.kis.powp.jobs2d.events.SelectTestFigureOptionListener;
-import edu.kis.powp.jobs2d.features.ClicksConverter;
-import edu.kis.powp.jobs2d.features.CommandsFeature;
-import edu.kis.powp.jobs2d.features.DrawerFeature;
-import edu.kis.powp.jobs2d.features.DriverFeature;
+import edu.kis.powp.jobs2d.features.*;
 import edu.kis.powp.jobs2d.transformations.FlipTransformationDecorator;
 import edu.kis.powp.jobs2d.transformations.RotateTransformationDecorator;
 import edu.kis.powp.jobs2d.transformations.ScaleTransformationDecorator;
@@ -81,11 +81,20 @@ public class TestJobs2dApp {
         driver = new ScaleTransformationDecorator(driver,2,2);
         driver = new FlipTransformationDecorator(driver,false,true);
         DriverFeature.addDriver("Scaled and flipped vertically special line Simulator", driver);
+    }
 
-        Job2dDriver d1 = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
-        MyCanva canvaDriver = new MyCanva(d1, 400, 400);
-        canvaDriver.drawWorkspaceBoundary();
-        DriverFeature.addDriver("My canvas", canvaDriver);
+    private static void setupBoundaryShape(Application application) {
+        DrawPanelController drawerController = DrawerFeature.getDrawerController();
+
+        Job2dDriver lineForShapeCanva = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
+        ShapeBoundary boundRectangle = new RectangleBoundary(400, 400);
+        MyCanva rectanbeCanvaDriver = new MyCanva(lineForShapeCanva, boundRectangle);
+        ShapeFeature.addShape("My Rectangle canvas", rectanbeCanvaDriver);
+
+
+        ShapeBoundary boundHexagonal = new CircularBoundary(200);
+        MyCanva hexagonalCanvaDriver = new MyCanva(lineForShapeCanva, boundHexagonal);
+        ShapeFeature.addShape("My Hexagonal canvas", hexagonalCanvaDriver);
     }
 
     private static void setupWindows(Application application) {
@@ -133,8 +142,13 @@ public class TestJobs2dApp {
 
                 DriverFeature.setupDriverPlugin(app);
                 setupDrivers(app);
+
+                ShapeFeature.setupShapePlugin(app);
+                setupBoundaryShape(app);
+
                 setupPresetTests(app);
                 setupCommandTests(app);
+
                 setupLogger(app);
                 setupWindows(app);
                 setupMouseHandler(app);
