@@ -12,6 +12,7 @@ import edu.kis.powp.jobs2d.command.gui.CommandManagerWindow;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver;
 import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
+import edu.kis.powp.jobs2d.drivers.canva.MyCanva;
 import edu.kis.powp.jobs2d.events.SelectLoadSecretCommandOptionListener;
 import edu.kis.powp.jobs2d.events.SelectRunCurrentCommandOptionListener;
 import edu.kis.powp.jobs2d.events.SelectTestFigure2OptionListener;
@@ -80,6 +81,11 @@ public class TestJobs2dApp {
         driver = new ScaleTransformationDecorator(driver,2,2);
         driver = new FlipTransformationDecorator(driver,false,true);
         DriverFeature.addDriver("Scaled and flipped vertically special line Simulator", driver);
+
+        Job2dDriver d1 = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
+        MyCanva canvaDriver = new MyCanva(d1, 400, 400);
+        canvaDriver.drawWorkspaceBoundary();
+        DriverFeature.addDriver("My canvas", canvaDriver);
     }
 
     private static void setupWindows(Application application) {
