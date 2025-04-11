@@ -1,27 +1,27 @@
 package edu.kis.powp.jobs2d.command;
 
-import edu.kis.powp.jobs2d.command.*;
-
 public class SimpleCountingVisitor implements DriverCommandVisitor {
 
-    private int commandCount = 0;
-
-    @Override
-    public void visit(SetPositionCommand command) {
-        commandCount++;
+    public int count(DriverCommand command) {
+        return command.accept(this);
     }
 
     @Override
-    public void visit(OperateToCommand command) {
-        commandCount++;
+    public int visit(SetPositionCommand command) {
+        return 1;
     }
 
     @Override
-    public void visit(ICompoundCommand command) {
-        commandCount++;
+    public int visit(OperateToCommand command) {
+        return 1;
     }
 
-    public int getCommandCount() {
-        return commandCount;
+    @Override
+    public int visit(ICompoundCommand compoundCommand) {
+        int total = 0;
+        for (DriverCommand subCommand : compoundCommand) {
+            total += subCommand.accept(this);
+        }
+        return total;
     }
 }

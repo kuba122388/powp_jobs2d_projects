@@ -54,16 +54,7 @@ public class TestJobs2dApp {
 
         application.addTest("Run command", new SelectRunCurrentCommandOptionListener(DriverFeature.getDriverManager()));
 
-        application.addTest("Count commands", (e) -> {
-            DriverCommand command = CommandsFeature.getDriverCommandManager().getCurrentCommand();
-            if (command != null) {
-                SimpleCountingVisitor visitor = new SimpleCountingVisitor();
-                command.accept(visitor);
-                logger.info("Total commands (including compound): " + visitor.getCommandCount());
-            } else {
-                logger.warning("No command loaded to count.");
-            }
-        });
+        application.addTest("Count commands", (e) -> CountCommandsTest.execute());
     }
 
     /**

@@ -1,7 +1,7 @@
 package edu.kis.powp.jobs2d.command;
 
 public interface DriverCommandVisitor {
-    void visit(SetPositionCommand command);
-    void visit(OperateToCommand command);
-    void visit(ICompoundCommand command);
+    int visit(SetPositionCommand command);
+    int visit(OperateToCommand command);
+    int visit(ICompoundCommand command);
 }

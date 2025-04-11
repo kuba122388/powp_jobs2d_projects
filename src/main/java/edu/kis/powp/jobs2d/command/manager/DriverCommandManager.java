@@ -49,11 +49,8 @@ public class DriverCommandManager {
             }
 
             @Override
-            public void accept(DriverCommandVisitor visitor) {
-                visitor.visit(this);
-                for (DriverCommand command : driverCommands) {
-                    command.accept(visitor);
-                }
+            public int accept(DriverCommandVisitor visitor) {
+                return visitor.visit(this);
             }
 
             @Override
