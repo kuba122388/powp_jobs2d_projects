@@ -1,22 +1,21 @@
 package edu.kis.powp.jobs2d.drivers.canva;
 
-import edu.kis.legacy.drawer.shape.ILine;
 import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.jobs2d.Job2dDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
-import edu.kis.powp.jobs2d.drivers.canva.shapes.ShapeBoundary;
+import edu.kis.powp.jobs2d.drivers.canva.shapes.CanvaShape;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 
 
-public class MyCanva implements Job2dDriver {
+public class WorkspaceCanva implements Job2dDriver {
     private final Job2dDriver innerDriver;
 
     private final Job2dDriver borderDriver;
 
     private int X, Y;
-    private ShapeBoundary bound;
+    private CanvaShape bound;
 
-    public MyCanva(Job2dDriver innerDriver,  ShapeBoundary bound) {
+    public WorkspaceCanva(Job2dDriver innerDriver, CanvaShape bound) {
         this.innerDriver = innerDriver;
         this.bound = bound;
 
@@ -39,9 +38,8 @@ public class MyCanva implements Job2dDriver {
         innerDriver.operateTo(X, Y);
     }
 
-    public MyCanva drawWorkspaceBoundary() {
+    public void drawWorkspaceBoundary() {
         bound.draw(borderDriver);
-        return this;
     }
 
 

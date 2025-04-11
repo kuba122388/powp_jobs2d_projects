@@ -2,10 +2,10 @@ package edu.kis.powp.jobs2d.drivers.canva.shapes;
 
 import edu.kis.powp.jobs2d.Job2dDriver;
 
-public class RectangleBoundary implements ShapeBoundary {
+public class RectangleCanva implements CanvaShape {
     private final int width, height;
 
-    public RectangleBoundary(int width, int height) {
+    public RectangleCanva(int width, int height) {
         this.width = width;
         this.height = height;
     }

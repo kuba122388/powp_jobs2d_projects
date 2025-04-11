@@ -2,10 +2,10 @@ package edu.kis.powp.jobs2d.drivers.canva.shapes;
 
 import edu.kis.powp.jobs2d.Job2dDriver;
 
-public class CircularBoundary implements ShapeBoundary {
+public class CircularCanva implements CanvaShape {
     private final int radius;
 
-    public CircularBoundary(int radius) {
+    public CircularCanva(int radius) {
         this.radius = radius;
     }
 
