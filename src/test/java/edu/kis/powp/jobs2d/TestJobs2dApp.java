@@ -13,6 +13,7 @@ import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver
 import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.drivers.canva.WorkspaceCanva;
+import edu.kis.powp.jobs2d.drivers.canva.shapes.A4FormatCanva;
 import edu.kis.powp.jobs2d.drivers.canva.shapes.CircularCanva;
 import edu.kis.powp.jobs2d.drivers.canva.shapes.RectangleCanva;
 import edu.kis.powp.jobs2d.drivers.canva.shapes.CanvaShape;
@@ -88,13 +89,19 @@ public class TestJobs2dApp {
 
         Job2dDriver lineForShapeCanva = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
         CanvaShape boundRectangle = new RectangleCanva(400, 400);
-        WorkspaceCanva rectanbeCanvaDriver = new WorkspaceCanva(lineForShapeCanva, boundRectangle);
-        WorkspaceFeature.addWorkspaceShape("My Rectangle canvas", rectanbeCanvaDriver);
+        WorkspaceCanva rectangleCanvaDriver = new WorkspaceCanva(lineForShapeCanva, boundRectangle);
+        WorkspaceFeature.addWorkspaceShape("Rectangle canvas", rectangleCanvaDriver);
+
+        CanvaShape boundA4Format = new A4FormatCanva();
+        WorkspaceCanva a4FormatCanvaDriver = new WorkspaceCanva(lineForShapeCanva, boundA4Format);
+        WorkspaceFeature.addWorkspaceShape("A4 format canvas", a4FormatCanvaDriver);
 
 
-        CanvaShape boundHexagonal = new CircularCanva(200);
-        WorkspaceCanva hexagonalCanvaDriver = new WorkspaceCanva(lineForShapeCanva, boundHexagonal);
-        WorkspaceFeature.addWorkspaceShape("My Hexagonal canvas", hexagonalCanvaDriver);
+        CanvaShape boundCircular = new CircularCanva(200);
+        WorkspaceCanva circularCanvaDriver = new WorkspaceCanva(lineForShapeCanva, boundCircular);
+        WorkspaceFeature.addWorkspaceShape("My Circular canvas", circularCanvaDriver);
+
+
     }
 
     private static void setupWindows(Application application) {
