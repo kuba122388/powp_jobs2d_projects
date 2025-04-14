@@ -49,11 +49,6 @@ public class DriverCommandManager {
             }
 
             @Override
-            public int accept(DriverCommandVisitor visitor) {
-                return visitor.visit(this);
-            }
-
-            @Override
             public String toString() {
                 return name;
             }

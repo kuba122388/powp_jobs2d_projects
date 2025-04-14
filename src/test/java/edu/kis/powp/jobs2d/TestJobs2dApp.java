@@ -8,8 +8,6 @@ import java.util.logging.Logger;
 import edu.kis.legacy.drawer.panel.DrawPanelController;
 import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.appbase.Application;
-import edu.kis.powp.jobs2d.command.DriverCommand;
-import edu.kis.powp.jobs2d.command.SimpleCountingVisitor;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindow;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver;
 import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
@@ -54,7 +52,7 @@ public class TestJobs2dApp {
 
         application.addTest("Run command", new SelectRunCurrentCommandOptionListener(DriverFeature.getDriverManager()));
 
-        application.addTest("Count commands", (e) -> CountCommandsTest.execute());
+        application.addTest("Count subcommands", (e) -> CountCommandsTest.execute());
     }
 
     /**

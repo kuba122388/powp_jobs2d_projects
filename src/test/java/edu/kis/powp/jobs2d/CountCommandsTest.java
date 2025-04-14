@@ -3,7 +3,7 @@ package edu.kis.powp.jobs2d;
 import java.util.logging.Logger;
 
 import edu.kis.powp.jobs2d.command.DriverCommand;
-import edu.kis.powp.jobs2d.command.SimpleCountingVisitor;
+import edu.kis.powp.jobs2d.command.SimpleDriverCommandCountingVisitor;
 import edu.kis.powp.jobs2d.features.CommandsFeature;
 
 public class CountCommandsTest {
@@ -13,8 +13,9 @@ public class CountCommandsTest {
     public static void execute() {
         DriverCommand command = CommandsFeature.getDriverCommandManager().getCurrentCommand();
         if (command != null) {
-            SimpleCountingVisitor visitor = new SimpleCountingVisitor();
-            int count = command.accept(visitor);
+            SimpleDriverCommandCountingVisitor visitor = new SimpleDriverCommandCountingVisitor();
+            command.accept(visitor);
+            int count = visitor.getTotal();
             logger.info("Total commands (flattened): " + count);
         } else {
             logger.warning("No command loaded to count.");

@@ -28,9 +28,4 @@ public class ComplexCommand implements ICompoundCommand {
     public Iterator<DriverCommand> iterator() {
         return commandList.iterator();
     }
-
-    @Override
-    public int accept(DriverCommandVisitor visitor) {
-        return visitor.visit(this);
-    }
 }
