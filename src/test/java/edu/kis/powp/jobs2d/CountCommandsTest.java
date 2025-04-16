@@ -3,7 +3,7 @@ package edu.kis.powp.jobs2d;
 import java.util.logging.Logger;
 
 import edu.kis.powp.jobs2d.command.DriverCommand;
-import edu.kis.powp.jobs2d.command.SimpleDriverCommandCountingVisitor;
+import edu.kis.powp.jobs2d.command.visitor.SimpleDriverCommandCountingVisitor;
 import edu.kis.powp.jobs2d.features.CommandsFeature;
 
 public class CountCommandsTest {
