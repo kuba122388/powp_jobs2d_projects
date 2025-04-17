@@ -10,6 +10,7 @@ import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.appbase.Application;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindow;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver;
+import edu.kis.powp.jobs2d.drivers.ComplexDriver;
 import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.drivers.canva.WorkspaceCanva;
@@ -54,6 +55,7 @@ public class TestJobs2dApp {
 
         application.addTest("Run command", new SelectRunCurrentCommandOptionListener(DriverFeature.getDriverManager()));
 
+        application.addTest("Count subcommands", (e) -> CountCommandsTest.execute());
     }
 
     /**
@@ -66,13 +68,23 @@ public class TestJobs2dApp {
         DriverFeature.addDriver("Logger driver", loggerDriver);
 
         DrawPanelController drawerController = DrawerFeature.getDrawerController();
-        Job2dDriver driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
-        DriverFeature.addDriver("Line Simulator", driver);
-        DriverFeature.getDriverManager().setCurrentDriver(driver);
+        Job2dDriver basicLineDriver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
+        DriverFeature.addDriver("Line Simulator", basicLineDriver);
+        DriverFeature.getDriverManager().setCurrentDriver(basicLineDriver);
+        
+        ComplexDriver complexDriver = new ComplexDriver();
+        complexDriver.add(loggerDriver);
+        complexDriver.add(basicLineDriver);
 
-        driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
+        DriverFeature.addDriver("Line & Logger (Composite)", complexDriver);
+
+        DriverFeature.getDriverManager().setCurrentDriver(basicLineDriver);
+        DriverFeature.updateDriverInfo();
+      
+        Job2dDriver driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
         DriverFeature.addDriver("Special line Simulator", driver);
-
+        DriverFeature.updateDriverInfo();
+        
         driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "special");
         driver = new RotateTransformationDecorator(driver,45);
         driver = new FlipTransformationDecorator(driver,true,false);
