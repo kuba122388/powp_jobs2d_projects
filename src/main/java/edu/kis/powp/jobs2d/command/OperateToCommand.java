@@ -20,6 +20,22 @@ public class OperateToCommand implements DriverCommand {
     }
 
     @Override
+    public DriverCommand copy(){
+        return new OperateToCommand(this.posX,this.posY);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OperateToCommand)) return false;
+
+        OperateToCommand second = (OperateToCommand) o;
+
+        if (posX != second.posX) return false;
+        return posY == second.posY;
+    }
+
+    @Override
     public void accept(DriverCommandVisitor visitor) {
         visitor.visit(this);
     }
