@@ -52,6 +52,7 @@ public class TestJobs2dApp {
 
         application.addTest("Run command", new SelectRunCurrentCommandOptionListener(DriverFeature.getDriverManager()));
 
+        application.addTest("Count subcommands", (e) -> CountCommandsTest.execute());
     }
 
     /**
