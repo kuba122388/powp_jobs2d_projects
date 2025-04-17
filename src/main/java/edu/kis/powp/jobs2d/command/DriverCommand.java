@@ -24,4 +24,9 @@ public interface DriverCommand {
      * @param o object to compare
      */
     boolean equals(Object o);
+    /**
+     * Accepts a visitor
+     * @param visitor visitor to accept
+     */
+    void accept(DriverCommandVisitor visitor);
 }
