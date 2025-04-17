@@ -16,18 +16,18 @@ public class CircularCanva implements CanvaShape {
     }
 
     @Override
-    public int[] clipLine(int x0, int y0, int x1, int y1) {
+    public int[] clipLine(int startX, int startY, int endX, int endY) {
         final int steps = 100;
-        double dx = (x1 - x0) / (double) steps;
-        double dy = (y1 - y0) / (double) steps;
+        double dx = (endX - startX) / (double) steps;
+        double dy = (endY - startY) / (double) steps;
 
-        int clippedX = x0;
-        int clippedY = y0;
+        int clippedX = startX;
+        int clippedY = startY;
 
         // Iteracyjnie poszukujemy punktu przecięcia odcinka z okręgiem
         for (int i = 1; i <= steps; i++) {
-            int cx = (int) Math.round(x0 + dx * i);
-            int cy = (int) Math.round(y0 + dy * i);
+            int cx = (int) Math.round(startX + dx * i);
+            int cy = (int) Math.round(startY + dy * i);
             if (!contains(cx, cy)) {
                 break;
             }

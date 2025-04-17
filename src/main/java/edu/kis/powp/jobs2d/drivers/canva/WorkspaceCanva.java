@@ -12,9 +12,10 @@ public class WorkspaceCanva implements Job2dDriver {
 
     private final Job2dDriver borderDriver;
 
-    private int X, Y;
+    private int currentX,  currentY;
     private CanvaShape bound;
 
+    
     public WorkspaceCanva(Job2dDriver innerDriver, CanvaShape bound) {
         this.innerDriver = innerDriver;
         this.bound = bound;
@@ -23,19 +24,19 @@ public class WorkspaceCanva implements Job2dDriver {
     }
 
     @Override
-    public void setPosition(int i, int j) {
-        int[] clipped = clipPointToBounds(i, j);
-        X = clipped[0];
-        Y = clipped[1];
-        innerDriver.setPosition(X, Y);
+    public void setPosition(int x, int y) {
+        int[] clipped = clipPointToBounds(x, y);
+        currentX = clipped[0];
+         currentY = clipped[1];
+        innerDriver.setPosition(currentX,  currentY);
     }
 
     @Override
-    public void operateTo(int i, int j) {
-        int[] clipped = bound.clipLine(X, Y, i, j);
-        X = clipped[0];
-        Y = clipped[1];
-        innerDriver.operateTo(X, Y);
+    public void operateTo(int x, int y) {
+        int[] clipped = bound.clipLine(currentX,  currentY, x, y);
+        currentX = clipped[0];
+         currentY = clipped[1];
+        innerDriver.operateTo(currentX,  currentY);
     }
 
     public void drawWorkspaceBoundary() {
@@ -47,7 +48,7 @@ public class WorkspaceCanva implements Job2dDriver {
         if (bound.contains(x, y)) {
             return new int[]{x, y};
         } else {
-            return bound.clipLine(X, Y, x, y);
+            return bound.clipLine(currentX,  currentY, x, y);
         }
     }
 
