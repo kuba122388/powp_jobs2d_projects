@@ -2,7 +2,7 @@ package edu.kis.powp.jobs2d.features;
 
 import edu.kis.powp.appbase.Application;
 
-import edu.kis.powp.jobs2d.drivers.SelectworkspaceMenuOptionListener;
+import edu.kis.powp.jobs2d.drivers.SelectWorkspaceMenuOptionListener;
 import edu.kis.powp.jobs2d.drivers.canva.WorkspaceCanva;
 import edu.kis.powp.jobs2d.drivers.observers.DriverLabelChangeObserver;
 
@@ -19,7 +19,7 @@ public class WorkspaceFeature {
 
 
     public static void addWorkspaceShape(String name, WorkspaceCanva canvas) {
-        SelectworkspaceMenuOptionListener listener = new SelectworkspaceMenuOptionListener(canvas, DriverFeature.getDriverManager() );
+        SelectWorkspaceMenuOptionListener listener = new SelectWorkspaceMenuOptionListener(canvas, DriverFeature.getDriverManager() );
         app.addComponentMenuElement(WorkspaceFeature.class, name, listener);
     }
 }
