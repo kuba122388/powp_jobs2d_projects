@@ -10,21 +10,26 @@ import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.appbase.Application;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindow;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver;
+import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.events.SelectLoadSecretCommandOptionListener;
 import edu.kis.powp.jobs2d.events.SelectRunCurrentCommandOptionListener;
 import edu.kis.powp.jobs2d.events.SelectTestFigure2OptionListener;
 import edu.kis.powp.jobs2d.events.SelectTestFigureOptionListener;
+import edu.kis.powp.jobs2d.features.ClicksConverter;
 import edu.kis.powp.jobs2d.features.CommandsFeature;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 import edu.kis.powp.jobs2d.features.DriverFeature;
+import edu.kis.powp.jobs2d.transformations.FlipTransformationDecorator;
+import edu.kis.powp.jobs2d.transformations.RotateTransformationDecorator;
+import edu.kis.powp.jobs2d.transformations.ScaleTransformationDecorator;
 
 public class TestJobs2dApp {
     private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     /**
      * Setup test concerning preset figures in context.
-     * 
+     *
      * @param application Application context.
      */
     private static void setupPresetTests(Application application) {
@@ -39,7 +44,7 @@ public class TestJobs2dApp {
 
     /**
      * Setup test using driver commands in context.
-     * 
+     *
      * @param application Application context.
      */
     private static void setupCommandTests(Application application) {
@@ -47,15 +52,16 @@ public class TestJobs2dApp {
 
         application.addTest("Run command", new SelectRunCurrentCommandOptionListener(DriverFeature.getDriverManager()));
 
+        application.addTest("Count subcommands", (e) -> CountCommandsTest.execute());
     }
 
     /**
      * Setup driver manager, and set default Job2dDriver for application.
-     * 
+     *
      * @param application Application context.
      */
     private static void setupDrivers(Application application) {
-        Job2dDriver loggerDriver = new LoggerDriver();
+        Job2dDriver loggerDriver = new InformativeLoggerDriver();
         DriverFeature.addDriver("Logger driver", loggerDriver);
 
         DrawPanelController drawerController = DrawerFeature.getDrawerController();
@@ -65,7 +71,16 @@ public class TestJobs2dApp {
 
         driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
         DriverFeature.addDriver("Special line Simulator", driver);
-        DriverFeature.updateDriverInfo();
+
+        driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "special");
+        driver = new RotateTransformationDecorator(driver,45);
+        driver = new FlipTransformationDecorator(driver,true,false);
+        DriverFeature.addDriver("Rotated and flipped horizontally line Simulator", driver);
+
+        driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
+        driver = new ScaleTransformationDecorator(driver,2,2);
+        driver = new FlipTransformationDecorator(driver,false,true);
+        DriverFeature.addDriver("Scaled and flipped vertically special line Simulator", driver);
     }
 
     private static void setupWindows(Application application) {
@@ -80,7 +95,7 @@ public class TestJobs2dApp {
 
     /**
      * Setup menu for adjusting logging settings.
-     * 
+     *
      * @param application Application context.
      */
     private static void setupLogger(Application application) {
@@ -95,6 +110,10 @@ public class TestJobs2dApp {
         application.addComponentMenuElement(Logger.class, "Severe level",
                 (ActionEvent e) -> logger.setLevel(Level.SEVERE));
         application.addComponentMenuElement(Logger.class, "OFF logging", (ActionEvent e) -> logger.setLevel(Level.OFF));
+    }
+
+    private static void setupMouseHandler(Application application) {
+        new ClicksConverter(application.getFreePanel());
     }
 
     /**
@@ -113,6 +132,7 @@ public class TestJobs2dApp {
                 setupCommandTests(app);
                 setupLogger(app);
                 setupWindows(app);
+                setupMouseHandler(app);
 
                 app.setVisibility(true);
             }

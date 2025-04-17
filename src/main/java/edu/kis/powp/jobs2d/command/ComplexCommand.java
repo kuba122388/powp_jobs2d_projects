@@ -47,8 +47,8 @@ public class ComplexCommand implements ICompoundCommand {
 
     @Override
     public void execute(Job2dDriver driver){
-        while (this.iterator().hasNext()){
-            this.iterator().next().execute(driver);
+        for (DriverCommand command : commandList) {
+            command.execute(driver);
         }
     }
 

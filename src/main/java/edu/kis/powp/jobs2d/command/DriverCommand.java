@@ -13,6 +13,15 @@ public interface DriverCommand {
      * @param driver driver.
      */
     void execute(Job2dDriver driver);
+  
+    /**
+     * Creates a new deep copy of itself
+     */
     DriverCommand copy();
+  
+    /**
+     * Compares an object
+     * @param o object to compare
+     */
     boolean equals(Object o);
 }
