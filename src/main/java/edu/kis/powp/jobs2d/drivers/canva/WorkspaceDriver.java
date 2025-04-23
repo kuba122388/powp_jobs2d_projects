@@ -7,7 +7,7 @@ import edu.kis.powp.jobs2d.drivers.canva.shapes.CanvaShape;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 
 
-public class WorkspaceCanva implements Job2dDriver {
+public class WorkspaceDriver implements Job2dDriver {
     private final Job2dDriver innerDriver;
 
     private final Job2dDriver borderDriver;
@@ -16,7 +16,7 @@ public class WorkspaceCanva implements Job2dDriver {
     private CanvaShape bound;
 
     
-    public WorkspaceCanva(Job2dDriver innerDriver, CanvaShape bound) {
+    public WorkspaceDriver(Job2dDriver innerDriver, CanvaShape bound) {
         this.innerDriver = innerDriver;
         this.bound = bound;
 
@@ -25,17 +25,21 @@ public class WorkspaceCanva implements Job2dDriver {
 
     @Override
     public void setPosition(int x, int y) {
+        if ( innerDriver == null )
+            return;
         int[] clipped = clipPointToBounds(x, y);
         currentX = clipped[0];
-         currentY = clipped[1];
+        currentY = clipped[1];
         innerDriver.setPosition(currentX,  currentY);
     }
 
     @Override
     public void operateTo(int x, int y) {
+        if ( innerDriver == null )
+            return;
         int[] clipped = bound.clipLine(currentX,  currentY, x, y);
         currentX = clipped[0];
-         currentY = clipped[1];
+        currentY = clipped[1];
         innerDriver.operateTo(currentX,  currentY);
     }
 

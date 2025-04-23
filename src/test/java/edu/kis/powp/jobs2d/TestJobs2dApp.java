@@ -13,7 +13,7 @@ import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver
 import edu.kis.powp.jobs2d.drivers.ComplexDriver;
 import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
-import edu.kis.powp.jobs2d.drivers.canva.WorkspaceCanva;
+import edu.kis.powp.jobs2d.drivers.canva.WorkspaceDriver;
 import edu.kis.powp.jobs2d.drivers.canva.shapes.A4FormatCanva;
 import edu.kis.powp.jobs2d.drivers.canva.shapes.CircularCanva;
 import edu.kis.powp.jobs2d.drivers.canva.shapes.RectangleCanva;
@@ -97,20 +97,20 @@ public class TestJobs2dApp {
     }
 
     private static void setupWorkspaces(Application application) {
-        DrawPanelController drawerController = DrawerFeature.getDrawerController();
+        //DrawPanelController drawerController = DrawerFeature.getDrawerController();
 
-        Job2dDriver lineForShapeCanva = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
+        Job2dDriver lineForShapeCanva = null;
         CanvaShape boundRectangle = new RectangleCanva(400, 400);
-        WorkspaceCanva rectangleCanvaDriver = new WorkspaceCanva(lineForShapeCanva, boundRectangle);
+        WorkspaceDriver rectangleCanvaDriver = new WorkspaceDriver(lineForShapeCanva, boundRectangle);
         WorkspaceFeature.addWorkspaceShape("Rectangle canvas", rectangleCanvaDriver);
 
         CanvaShape boundA4Format = new A4FormatCanva();
-        WorkspaceCanva a4FormatCanvaDriver = new WorkspaceCanva(lineForShapeCanva, boundA4Format);
+        WorkspaceDriver a4FormatCanvaDriver = new WorkspaceDriver(lineForShapeCanva, boundA4Format);
         WorkspaceFeature.addWorkspaceShape("A4 format canvas", a4FormatCanvaDriver);
 
 
         CanvaShape boundCircular = new CircularCanva(200);
-        WorkspaceCanva circularCanvaDriver = new WorkspaceCanva(lineForShapeCanva, boundCircular);
+        WorkspaceDriver circularCanvaDriver = new WorkspaceDriver(lineForShapeCanva, boundCircular);
         WorkspaceFeature.addWorkspaceShape("My Circular canvas", circularCanvaDriver);
 
 
