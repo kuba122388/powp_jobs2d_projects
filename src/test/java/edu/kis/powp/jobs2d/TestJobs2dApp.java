@@ -11,6 +11,7 @@ import edu.kis.powp.appbase.Application;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindow;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver;
 import edu.kis.powp.jobs2d.drivers.ComplexDriver;
+import edu.kis.powp.jobs2d.drivers.DriverMonitoringDecorator;
 import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.events.SelectLoadSecretCommandOptionListener;
@@ -77,12 +78,10 @@ public class TestJobs2dApp {
         DriverFeature.addDriver("Line & Logger (Composite)", complexDriver);
 
         DriverFeature.getDriverManager().setCurrentDriver(basicLineDriver);
-        DriverFeature.updateDriverInfo();
-      
+
         Job2dDriver driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
         DriverFeature.addDriver("Special line Simulator", driver);
-        DriverFeature.updateDriverInfo();
-        
+
         driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "special");
         driver = new RotateTransformationDecorator(driver,45);
         driver = new FlipTransformationDecorator(driver,true,false);
@@ -92,6 +91,10 @@ public class TestJobs2dApp {
         driver = new ScaleTransformationDecorator(driver,2,2);
         driver = new FlipTransformationDecorator(driver,false,true);
         DriverFeature.addDriver("Scaled and flipped vertically special line Simulator", driver);
+
+        driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
+        driver = new DriverMonitoringDecorator(driver);
+        DriverFeature.addDriver("Monitored Driver",driver);
     }
 
     private static void setupWindows(Application application) {
