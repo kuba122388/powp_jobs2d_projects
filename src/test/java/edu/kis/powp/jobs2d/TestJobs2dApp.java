@@ -99,7 +99,7 @@ public class TestJobs2dApp {
     private static void setupWorkspaces(Application application) {
         //DrawPanelController drawerController = DrawerFeature.getDrawerController();
 
-        Job2dDriver lineForShapeCanva = null;//new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
+        Job2dDriver lineForShapeCanva = null;
         CanvaShape boundRectangle = new RectangleCanva(400, 400);
         WorkspaceDriver rectangleCanvaDriver = new WorkspaceDriver(lineForShapeCanva, boundRectangle);
         WorkspaceFeature.addWorkspaceShape("Rectangle canvas", rectangleCanvaDriver);
