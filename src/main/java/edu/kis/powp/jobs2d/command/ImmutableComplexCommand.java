@@ -12,9 +12,13 @@ public class ImmutableComplexCommand implements ICompoundCommand {
     private final List<DriverCommand> commands;
 
     public ImmutableComplexCommand(List<DriverCommand> commands) {
-        // Defensive copy + unmodifiable wrapper for immutability
-        this.commands = Collections.unmodifiableList(new ArrayList<>(commands));
+        List<DriverCommand> copiedCommands = new ArrayList<>();
+        for (DriverCommand command : commands) {
+            copiedCommands.add(command.copy());
+        }
+        this.commands = Collections.unmodifiableList(copiedCommands);
     }
+
 
     @Override
     public void execute(Job2dDriver driver) {
@@ -25,8 +29,13 @@ public class ImmutableComplexCommand implements ICompoundCommand {
 
     @Override
     public Iterator<DriverCommand> iterator() {
-        return commands.iterator();
+        List<DriverCommand> copiedList = new ArrayList<>();
+        for (DriverCommand command : commands) {
+            copiedList.add(command.copy());
+        }
+        return copiedList.iterator();
     }
+
 
     @Override
     public DriverCommand copy() {
