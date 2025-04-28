@@ -16,6 +16,10 @@ public class SelectWorkspaceMenuOptionListener implements ActionListener {
         this.borderDriver = borderDriver;
     }
 
+    public CanvaShape getCanvaShape() {
+        return canvas.getBound();
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         CanvaShape bound = canvas.getBound();
