@@ -2,24 +2,23 @@ package edu.kis.powp.jobs2d.drivers;
 
 import edu.kis.powp.jobs2d.Job2dDriver;
 import edu.kis.powp.jobs2d.drivers.canva.WorkspaceDriver;
+import edu.kis.powp.jobs2d.drivers.canva.shapes.CanvaShape;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SelectWorkspaceMenuOptionListener implements ActionListener {
-    private DriverManager driverManager;
-    private Job2dDriver driver = null;
-    private WorkspaceDriver canvas = null;
+    private final WorkspaceDriver canvas;
+    private final Job2dDriver borderDriver;
 
-    public SelectWorkspaceMenuOptionListener(WorkspaceDriver canva, DriverManager driverManager) {
-        this.driverManager = driverManager;
-        this.driver = canva;
+    public SelectWorkspaceMenuOptionListener(WorkspaceDriver canva, Job2dDriver borderDriver) {
         this.canvas = canva;
+        this.borderDriver = borderDriver;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        driverManager.setCurrentDriver(driver);
-        this.canvas.drawWorkspaceBoundary();
+        CanvaShape bound = canvas.getBound();
+        bound.draw(borderDriver);
     }
 }

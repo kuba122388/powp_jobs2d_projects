@@ -104,23 +104,18 @@ public class TestJobs2dApp {
     }
 
     private static void setupWorkspaces(Application application) {
-        //DrawPanelController drawerController = DrawerFeature.getDrawerController();
-
-        Job2dDriver lineForShapeCanva = null;
         CanvaShape boundRectangle = new RectangleCanva(400, 400);
-        WorkspaceDriver rectangleCanvaDriver = new WorkspaceDriver(lineForShapeCanva, boundRectangle);
+        WorkspaceDriver rectangleCanvaDriver = new WorkspaceDriver(boundRectangle);
         WorkspaceFeature.addWorkspaceShape("Rectangle canvas", rectangleCanvaDriver);
 
         CanvaShape boundA4Format = new A4FormatCanva();
-        WorkspaceDriver a4FormatCanvaDriver = new WorkspaceDriver(lineForShapeCanva, boundA4Format);
+        WorkspaceDriver a4FormatCanvaDriver = new WorkspaceDriver(boundA4Format);
         WorkspaceFeature.addWorkspaceShape("A4 format canvas", a4FormatCanvaDriver);
 
 
         CanvaShape boundCircular = new CircularCanva(200);
-        WorkspaceDriver circularCanvaDriver = new WorkspaceDriver(lineForShapeCanva, boundCircular);
+        WorkspaceDriver circularCanvaDriver = new WorkspaceDriver(boundCircular);
         WorkspaceFeature.addWorkspaceShape("My Circular canvas", circularCanvaDriver);
-
-
     }
 
     private static void setupWindows(Application application) {

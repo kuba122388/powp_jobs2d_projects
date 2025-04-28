@@ -10,35 +10,6 @@ public class CircularCanva implements CanvaShape {
     }
 
     @Override
-    public boolean contains(int x, int y) {
-        // Sprawdzenie czy punkt (x, y) znajduje się wewnątrz okręgu o promieniu radius
-        return (x * x + y * y) <= (radius * radius);
-    }
-
-    @Override
-    public int[] clipLine(int startX, int startY, int endX, int endY) {
-        final int steps = 100;
-        double dx = (endX - startX) / (double) steps;
-        double dy = (endY - startY) / (double) steps;
-
-        int clippedX = startX;
-        int clippedY = startY;
-
-        // Iteracyjnie poszukujemy punktu przecięcia odcinka z okręgiem
-        for (int i = 1; i <= steps; i++) {
-            int cx = (int) Math.round(startX + dx * i);
-            int cy = (int) Math.round(startY + dy * i);
-            if (!contains(cx, cy)) {
-                break;
-            }
-            clippedX = cx;
-            clippedY = cy;
-        }
-
-        return new int[]{clippedX, clippedY};
-    }
-
-    @Override
     public void draw(Job2dDriver driver) {
         int steps = 17; // liczba punktów wykorzystywanych do przybliżenia okręgu
         double angleStep = 2 * Math.PI / steps;
