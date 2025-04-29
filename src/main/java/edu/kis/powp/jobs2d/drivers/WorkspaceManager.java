@@ -19,5 +19,5 @@ public class WorkspaceManager {
         canvaShape.draw(borderDriver);
     }
 
-    public CanvaShape getCanvas() { return currentCanvaShape; }
+    public CanvaShape getCurrentCanvaShape() { return currentCanvaShape; }
 }
