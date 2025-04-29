@@ -1,19 +1,19 @@
 package edu.kis.powp.jobs2d.drivers;
 
-import edu.kis.powp.jobs2d.drivers.canva.WorkspaceDriver;
+import edu.kis.powp.jobs2d.drivers.canva.shapes.CanvaShape;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SelectWorkspaceMenuOptionListener implements ActionListener {
-    private final WorkspaceDriver canvas;
+    private final CanvaShape shape;
     private WorkspaceManager workspaceManager;
 
-    public SelectWorkspaceMenuOptionListener(WorkspaceDriver canva, WorkspaceManager workspaceManager) {
-        this.canvas = canva;
+    public SelectWorkspaceMenuOptionListener(CanvaShape shape, WorkspaceManager workspaceManager) {
+        this.shape = shape;
         this.workspaceManager = workspaceManager;
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) { workspaceManager.setWorkspaceDriver(canvas); }
+    public void actionPerformed(ActionEvent e) { workspaceManager.setWorkspaceCanvaShape(shape); }
 }

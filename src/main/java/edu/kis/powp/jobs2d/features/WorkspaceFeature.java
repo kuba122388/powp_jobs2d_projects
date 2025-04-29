@@ -4,7 +4,7 @@ import edu.kis.powp.appbase.Application;
 
 import edu.kis.powp.jobs2d.drivers.SelectWorkspaceMenuOptionListener;
 import edu.kis.powp.jobs2d.drivers.WorkspaceManager;
-import edu.kis.powp.jobs2d.drivers.canva.WorkspaceDriver;
+import edu.kis.powp.jobs2d.drivers.canva.shapes.CanvaShape;
 
 public class WorkspaceFeature {
     private static Application app;
@@ -17,8 +17,8 @@ public class WorkspaceFeature {
 
     public WorkspaceManager getWorkspaceManager() { return workspaceManager; }
 
-    public static void addWorkspaceShape(String name, WorkspaceDriver canvas) {
-        SelectWorkspaceMenuOptionListener listener = new SelectWorkspaceMenuOptionListener(canvas, workspaceManager);
+    public static void addWorkspaceShape(String name, CanvaShape shape) {
+        SelectWorkspaceMenuOptionListener listener = new SelectWorkspaceMenuOptionListener(shape, workspaceManager);
         app.addComponentMenuElement(WorkspaceFeature.class, name, listener);
     }
 }
