@@ -19,7 +19,6 @@ public class RectangleCanva implements CanvaShape {
 
     @Override
     public int[] clipLine(int startX, int startY, int endX, int endY) {
-        // Liang-Barsky algorytm, jak wcześniej
         double t0 = 0.0, t1 = 1.0;
         int dx = endX - startX, dy = endY - startY;
         int[] bounds = {-width / 2, width / 2, -height / 2, height / 2};
