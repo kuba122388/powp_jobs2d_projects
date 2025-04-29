@@ -16,7 +16,6 @@ import edu.kis.powp.jobs2d.drivers.monitoring.DriverMonitorDecorator;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverUsageMonitor;
 import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
-import edu.kis.powp.jobs2d.drivers.canva.WorkspaceDriver;
 import edu.kis.powp.jobs2d.drivers.canva.shapes.A4FormatCanva;
 import edu.kis.powp.jobs2d.drivers.canva.shapes.CircularCanva;
 import edu.kis.powp.jobs2d.drivers.canva.shapes.RectangleCanva;
@@ -103,24 +102,15 @@ public class TestJobs2dApp {
         DriverFeature.addDriver("Monitored Driver",driver);
     }
 
-    private static void setupWorkspaces(Application application) {
-        //DrawPanelController drawerController = DrawerFeature.getDrawerController();
-
-        Job2dDriver lineForShapeCanva = null;
+    private static void setupWorkspaces() {
         CanvaShape boundRectangle = new RectangleCanva(400, 400);
-        WorkspaceDriver rectangleCanvaDriver = new WorkspaceDriver(lineForShapeCanva, boundRectangle);
-        WorkspaceFeature.addWorkspaceShape("Rectangle canvas", rectangleCanvaDriver);
+        WorkspaceFeature.addWorkspaceShape("Rectangle canvas", boundRectangle);
 
         CanvaShape boundA4Format = new A4FormatCanva();
-        WorkspaceDriver a4FormatCanvaDriver = new WorkspaceDriver(lineForShapeCanva, boundA4Format);
-        WorkspaceFeature.addWorkspaceShape("A4 format canvas", a4FormatCanvaDriver);
-
+        WorkspaceFeature.addWorkspaceShape("A4 format canvas", boundA4Format);
 
         CanvaShape boundCircular = new CircularCanva(200);
-        WorkspaceDriver circularCanvaDriver = new WorkspaceDriver(lineForShapeCanva, boundCircular);
-        WorkspaceFeature.addWorkspaceShape("My Circular canvas", circularCanvaDriver);
-
-
+        WorkspaceFeature.addWorkspaceShape("My Circular canvas", boundCircular);
     }
 
     private static void setupWindows(Application application) {
@@ -170,7 +160,7 @@ public class TestJobs2dApp {
                 setupDrivers(app);
 
                 WorkspaceFeature.setupWorkspacePlugin(app);
-                setupWorkspaces(app);
+                setupWorkspaces();
 
                 setupPresetTests(app);
                 setupCommandTests(app);
