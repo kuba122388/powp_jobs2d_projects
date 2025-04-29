@@ -16,6 +16,10 @@ import edu.kis.powp.jobs2d.drivers.monitoring.DriverMonitorDecorator;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverUsageMonitor;
 import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
+import edu.kis.powp.jobs2d.drivers.canva.shapes.A4FormatCanva;
+import edu.kis.powp.jobs2d.drivers.canva.shapes.CircularCanva;
+import edu.kis.powp.jobs2d.drivers.canva.shapes.RectangleCanva;
+import edu.kis.powp.jobs2d.drivers.canva.shapes.CanvaShape;
 import edu.kis.powp.jobs2d.events.SelectLoadSecretCommandOptionListener;
 import edu.kis.powp.jobs2d.events.SelectRunCurrentCommandOptionListener;
 import edu.kis.powp.jobs2d.events.SelectTestFigure2OptionListener;
@@ -101,6 +105,17 @@ public class TestJobs2dApp {
         DriverFeature.addDriver("Monitored Driver",driver);
     }
 
+    private static void setupWorkspaces() {
+        CanvaShape boundRectangle = new RectangleCanva(400, 400);
+        WorkspaceFeature.addWorkspaceShape("Rectangle canvas", boundRectangle);
+
+        CanvaShape boundA4Format = new A4FormatCanva();
+        WorkspaceFeature.addWorkspaceShape("A4 format canvas", boundA4Format);
+
+        CanvaShape boundCircular = new CircularCanva(200);
+        WorkspaceFeature.addWorkspaceShape("My Circular canvas", boundCircular);
+    }
+
     private static void setupWindows(Application application) {
 
         CommandManagerWindow commandManager = new CommandManagerWindow(CommandsFeature.getDriverCommandManager());
@@ -146,8 +161,13 @@ public class TestJobs2dApp {
 
                 DriverFeature.setupDriverPlugin(app);
                 setupDrivers(app);
+
+                WorkspaceFeature.setupWorkspacePlugin(app);
+                setupWorkspaces();
+
                 setupPresetTests(app);
                 setupCommandTests(app);
+
                 setupLogger(app);
                 setupWindows(app);
                 setupMouseHandler(app);
