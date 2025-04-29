@@ -7,7 +7,7 @@ import edu.kis.powp.jobs2d.drivers.canva.shapes.CanvaShape;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 
 public class WorkspaceManager {
-    private CanvaShape canvaShape;
+    private CanvaShape currentCanvaShape;
     private final Job2dDriver borderDriver;
 
     public WorkspaceManager() {
@@ -15,9 +15,9 @@ public class WorkspaceManager {
     }
 
     public synchronized void setWorkspaceCanvaShape(CanvaShape canvaShape) {
-        this.canvaShape = canvaShape;
+        this.currentCanvaShape = canvaShape;
         canvaShape.draw(borderDriver);
     }
 
-    public CanvaShape getCanvas() { return canvaShape; }
+    public CanvaShape getCanvas() { return currentCanvaShape; }
 }
