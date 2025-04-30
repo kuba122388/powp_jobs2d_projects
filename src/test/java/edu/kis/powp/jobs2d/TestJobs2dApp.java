@@ -16,10 +16,6 @@ import edu.kis.powp.jobs2d.drivers.monitoring.DriverMonitorDecorator;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverUsageMonitor;
 import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
-import edu.kis.powp.jobs2d.drivers.canva.shapes.A4FormatCanva;
-import edu.kis.powp.jobs2d.drivers.canva.shapes.CircularCanva;
-import edu.kis.powp.jobs2d.drivers.canva.shapes.RectangleCanva;
-import edu.kis.powp.jobs2d.drivers.canva.shapes.CanvaShape;
 import edu.kis.powp.jobs2d.events.*;
 import edu.kis.powp.jobs2d.features.ClicksConverter;
 import edu.kis.powp.jobs2d.features.CommandsFeature;
@@ -54,9 +50,9 @@ public class TestJobs2dApp {
      */
     private static void setupCommandTests(Application application) {
         application.addTest("Load secret command", new SelectLoadSecretCommandOptionListener());
-        application.addTest("Run command", new SelectRunCurrentCommandOptionListener(DriverFeature.getDriverManager()));
+        application.addTest("Load notSecret command", new SelectLoadNotSoSecretCommandOptionListener());
 
-        application.addTest("Run IComplex command", new SelectRunTestIComplexCommandOptionListener());
+        application.addTest("Run command", new SelectRunCurrentCommandOptionListener(DriverFeature.getDriverManager()));
 
         application.addTest("Count subcommands", (e) -> CountCommandsTest.execute());
     }
