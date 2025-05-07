@@ -1,13 +1,19 @@
 package edu.kis.powp.jobs2d.command;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 class ComplexCommandTest {
 
     static boolean compareCommands(ComplexCommand cc1, ComplexCommand cc2) {
         if (cc1.size() != cc2.size()) {
             return false;
         }
-        for (int i = 0; i < cc1.size(); i++) {
-            if (!cc1.iterator().next().equals(cc2.iterator().next())) {
+        Iterator<DriverCommand> it1 = cc1.iterator();
+        Iterator<DriverCommand> it2 = cc2.iterator();
+        while (it1.hasNext() && it2.hasNext()) {
+            if (!it1.next().equals(it2.next())) {
                 return false;
             }
         }
@@ -15,12 +21,15 @@ class ComplexCommandTest {
     }
 
     static void testIterator() {
-        ComplexCommand command = new ComplexCommand();
-        command.addCommand(new SetPositionCommand(0, 0));
-        command.addCommand(new OperateToCommand(10, 10));
-        ComplexCommand command2 = new ComplexCommand();
-        command2.addCommand(new SetPositionCommand(0, 0));
-        command2.addCommand(new OperateToCommand(10, 10));
+        ComplexCommand.Builder builder1 = new ComplexCommand.Builder();
+        builder1.addCommand(new SetPositionCommand(0, 0));
+        builder1.addCommand(new OperateToCommand(10, 10));
+        ComplexCommand command = builder1.build();
+
+        ComplexCommand.Builder builder2 = new ComplexCommand.Builder();
+        builder2.addCommand(new SetPositionCommand(0, 0));
+        builder2.addCommand(new OperateToCommand(10, 10));
+        ComplexCommand command2 = builder2.build();
 
         if (!compareCommands(command, command2)) {
             System.out.println("testIterator failed");
@@ -30,13 +39,17 @@ class ComplexCommandTest {
     }
 
     static void testIsEmpty() {
-        ComplexCommand command = new ComplexCommand();
+        ComplexCommand.Builder builder = new ComplexCommand.Builder();
+        ComplexCommand command = builder.build();
 
         if (!command.isEmpty()) {
             System.out.println("testIsEmpty failed");
         } else {
-            command.addCommand(new SetPositionCommand(0, 0));
-            if (command.isEmpty()) {
+            ComplexCommand.Builder builder2 = new ComplexCommand.Builder();
+            builder2.addCommand(new SetPositionCommand(0, 0));
+            ComplexCommand command2 = builder2.build();
+
+            if (command2.isEmpty()) {
                 System.out.println("testIsEmpty failed");
             } else {
                 System.out.println("testIsEmpty passed");
@@ -45,13 +58,45 @@ class ComplexCommandTest {
     }
 
     static void testAddCommand() {
-        ComplexCommand command = new ComplexCommand();
-        command.addCommand(new SetPositionCommand(0, 0));
+        ComplexCommand.Builder builder = new ComplexCommand.Builder();
+        builder.addCommand(new SetPositionCommand(0, 0));
+        ComplexCommand command = builder.build();
 
         if (command.size() != 1) {
             System.out.println("testAddCommand failed");
         } else {
             System.out.println("testAddCommand passed");
+        }
+    }
+
+    static void testBuilderAddCommand() {
+        ComplexCommand.Builder builder = new ComplexCommand.Builder();
+        builder.addCommand(new SetPositionCommand(0, 0));
+        builder.addCommand(new OperateToCommand(10, 10));
+        ComplexCommand command = builder.build();
+
+        if (command.size() != 2) {
+            System.out.println("testBuilderAddCommand failed");
+        } else {
+            System.out.println("testBuilderAddCommand passed");
+        }
+    }
+
+    static void testBuilderAddCommands() {
+        ComplexCommand.Builder builder = new ComplexCommand.Builder();
+        builder.addCommand(new SetPositionCommand(0, 0));
+
+        List<DriverCommand> additionalCommands = new ArrayList<>();
+        additionalCommands.add(new OperateToCommand(10, 10));
+        additionalCommands.add(new OperateToCommand(20, 20));
+        builder.addCommands(additionalCommands);
+
+        ComplexCommand command = builder.build();
+
+        if (command.size() != 3) {
+            System.out.println("testBuilderAddCommands failed");
+        } else {
+            System.out.println("testBuilderAddCommands passed");
         }
     }
 
@@ -77,6 +122,19 @@ class ComplexCommandTest {
             System.out.println("testRemoveCommand failed");
         } else {
             System.out.println("testRemoveCommand passed");
+        }
+    }
+
+    static void testCopy() {
+        ComplexCommand.Builder builder = new ComplexCommand.Builder();
+        builder.addCommand(new SetPositionCommand(10, 10));
+        ComplexCommand command = builder.build();
+        ComplexCommand copy = (ComplexCommand) command.copy();
+
+        if (command.size() != copy.size() || command == copy) {
+            System.out.println("testCopy failed");
+        } else {
+            System.out.println("testCopy passed");
         }
     }
 
@@ -118,18 +176,24 @@ class ComplexCommandTest {
         }
     }
 
+    static void testEquals() {
+        ComplexCommand.Builder builder1 = new ComplexCommand.Builder();
+        builder1.addCommand(new SetPositionCommand(10, 10));
+        builder1.addCommand(new OperateToCommand(20, 20));
+        ComplexCommand command1 = builder1.build();
 
-    static void testCopy() {
-        ComplexCommand command = new ComplexCommand();
-        command.addCommand(0, new SetPositionCommand(10, 10));
-        ComplexCommand copy = (ComplexCommand) command.copy();
+        ComplexCommand.Builder builder2 = new ComplexCommand.Builder();
+        builder2.addCommand(new SetPositionCommand(10, 10));
+        builder2.addCommand(new OperateToCommand(20, 20));
+        ComplexCommand command2 = builder2.build();
 
-        if (command.size() != copy.size() || command == copy) {
-            System.out.println("testCopy failed");
+        if (!command1.equals(command2)) {
+            System.out.println("testEquals failed");
         } else {
-            System.out.println("testCopy passed");
+            System.out.println("testEquals passed");
         }
     }
+
 
     public static void main(String[] args) {
         testIterator();
@@ -141,5 +205,8 @@ class ComplexCommandTest {
         testIsEmpty();
         testClear();
         testCopy();
+        testBuilderAddCommand();
+        testBuilderAddCommands();
+        testEquals();
     }
 }
