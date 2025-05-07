@@ -14,6 +14,7 @@ import edu.kis.powp.jobs2d.canva.factories.RectangleCanvaFactory;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindow;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver;
 import edu.kis.powp.jobs2d.command.manager.CommandHistoryManager;
+import edu.kis.powp.jobs2d.command.visitor.DriverCommandTransformVisitor;
 import edu.kis.powp.jobs2d.drivers.ComplexDriver;
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
 import edu.kis.powp.jobs2d.canva.shapes.CircularCanva;
@@ -134,6 +135,7 @@ public class TestJobs2dApp {
                 commandManager);
 
         CommandsFeature.getDriverCommandManager().getChangePublisher().addSubscriber(windowObserver);
+        application.addTest("Transform current command", new TransformCurrentCommandOptionListener());
         CommandsFeature.getDriverCommandManager().getChangePublisher().addSubscriber(commandHistoryManager);
     }
 
