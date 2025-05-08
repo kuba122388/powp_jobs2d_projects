@@ -1,4 +1,4 @@
-package edu.kis.powp.jobs2d.drivers.canva.shapes;
+package edu.kis.powp.jobs2d.canva.shapes;
 
 import edu.kis.powp.jobs2d.Job2dDriver;
 

@@ -4,7 +4,7 @@ import edu.kis.powp.appbase.Application;
 
 import edu.kis.powp.jobs2d.drivers.SelectWorkspaceMenuOptionListener;
 import edu.kis.powp.jobs2d.drivers.WorkspaceManager;
-import edu.kis.powp.jobs2d.drivers.canva.shapes.CanvaShape;
+import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
 
 public class WorkspaceFeature {
     private static Application app;
