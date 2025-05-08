@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,6 +69,7 @@ public class TestJobs2dApp {
 
         application.addTest("Count subcommands", (e) -> CountCommandsTest.execute());
         application.addTest("Count drivers", (e) -> CountDriversTest.execute());
+
     }
 
 
@@ -94,17 +97,6 @@ public class TestJobs2dApp {
 
         VisitableJob2dDriver driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
         DriverFeature.addDriver("Special line Simulator", driver);
-
-        DriverCommandTransformVisitor visitor = new DriverCommandTransformVisitor();
-        visitor.addTransformation(new RotateTransformationDecorator(45));
-        visitor.addTransformation(new FlipTransformationDecorator(true, false));
-        DriverFeature.addDriver("Rotated and flipped horizontally line Simulator", driver);
-
-        driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
-        visitor = new DriverCommandTransformVisitor();
-        visitor.addTransformation(new ScaleTransformationDecorator(2,2));
-        visitor.addTransformation(new FlipTransformationDecorator(false,true));
-        DriverFeature.addDriver("Scaled and flipped vertically special line Simulator", driver);
 
         DriverUsageMonitor usageMonitor = new DriverUsageMonitor();
         DriverLoggingMonitor loggingMonitor = new DriverLoggingMonitor();

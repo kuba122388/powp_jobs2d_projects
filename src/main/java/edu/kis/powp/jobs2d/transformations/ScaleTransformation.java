@@ -1,12 +1,10 @@
 package edu.kis.powp.jobs2d.transformations;
 
-import edu.kis.powp.jobs2d.Job2dDriver;
-
-public class ScaleTransformationDecorator implements PointTransformation {
+public class ScaleTransformation implements PointTransformation {
     private final double scaleX;
     private final double scaleY;
 
-    public ScaleTransformationDecorator(double scaleX, double scaleY) {
+    public ScaleTransformation(double scaleX, double scaleY) {
         this.scaleX = scaleX;
         this.scaleY = scaleY;
     }

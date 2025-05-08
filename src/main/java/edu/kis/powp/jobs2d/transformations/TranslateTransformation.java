@@ -1,12 +1,10 @@
 package edu.kis.powp.jobs2d.transformations;
 
-import edu.kis.powp.jobs2d.Job2dDriver;
-
-public class TranslateTransformationDecorator implements PointTransformation {
+public class TranslateTransformation implements PointTransformation {
     private final double translateX;
     private final double translateY;
 
-    public TranslateTransformationDecorator(double translateX, double translateY) {
+    public TranslateTransformation(double translateX, double translateY) {
         this.translateX = translateX;
         this.translateY = translateY;
     }

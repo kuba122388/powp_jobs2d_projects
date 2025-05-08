@@ -4,33 +4,31 @@ import edu.kis.powp.jobs2d.command.DriverCommand;
 import edu.kis.powp.jobs2d.command.manager.DriverCommandManager;
 import edu.kis.powp.jobs2d.command.visitor.DriverCommandTransformVisitor;
 import edu.kis.powp.jobs2d.features.CommandsFeature;
-import edu.kis.powp.jobs2d.transformations.FlipTransformationDecorator;
-import edu.kis.powp.jobs2d.transformations.RotateTransformationDecorator;
-import edu.kis.powp.jobs2d.transformations.ScaleTransformationDecorator;
-import edu.kis.powp.jobs2d.transformations.TranslateTransformationDecorator;
+import edu.kis.powp.jobs2d.transformations.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class TransformCurrentCommandOptionListener implements ActionListener {
+    private final List<PointTransformation> transformations;
+
+    public TransformCurrentCommandOptionListener(List<PointTransformation> transformations) {
+        this.transformations = transformations;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DriverCommandManager commandManager = CommandsFeature.getDriverCommandManager();
-        DriverCommand currentCommand = commandManager.getCurrentCommand();
+        DriverCommand currentCommand = CommandsFeature.getDriverCommandManager().getCurrentCommand();
         if (currentCommand == null) {
             System.out.println("No command loaded.");
             return;
         }
 
         DriverCommandTransformVisitor visitor = new DriverCommandTransformVisitor();
-        visitor.addTransformation(new ScaleTransformationDecorator(1.5, 1.5));
-        visitor.addTransformation(new RotateTransformationDecorator(30));
-        visitor.addTransformation(new TranslateTransformationDecorator(50, 25));
-        visitor.addTransformation(new FlipTransformationDecorator(true, false));
-
+        transformations.forEach(visitor::addTransformation);
         currentCommand.accept(visitor);
-        commandManager.setCurrentCommand(visitor.getTransformedCommands(), "Transformed Command");
+        CommandsFeature.getDriverCommandManager().setCurrentCommand(visitor.getTransformedCommands(), "Transformed Command");
         System.out.println("Command transformed and updated.");
     }
 }
