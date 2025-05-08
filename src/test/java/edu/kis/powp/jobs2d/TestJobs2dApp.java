@@ -101,9 +101,9 @@ public class TestJobs2dApp {
         driver = new DriverMonitorDecorator(driver, usageMonitor, loggingMonitor);
         DriverFeature.addDriver("Monitored Driver",driver);
 
-        driver = new RealTimeDecoratorDriver(new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic"), application.getFreePanel());
+        driver = new RealTimeDecoratorDriver(new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic"), application.getFreePanel(), 30, 10);
         DriverFeature.addDriver("Basic line Simulator with real time drawing", driver);
-        driver = new RealTimeDecoratorDriver(new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special"), application.getFreePanel());
+        driver = new RealTimeDecoratorDriver(new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special"), application.getFreePanel(), 30, 10);
         DriverFeature.addDriver("Special line Simulator with real time drawing", driver);
     }
 
