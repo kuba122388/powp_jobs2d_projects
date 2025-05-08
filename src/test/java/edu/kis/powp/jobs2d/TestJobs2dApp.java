@@ -4,20 +4,22 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import edu.kis.legacy.drawer.panel.DrawPanelController;
 import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.appbase.Application;
+import edu.kis.powp.jobs2d.canva.factories.RectangleCanvaFactory;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindow;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver;
 import edu.kis.powp.jobs2d.command.visitor.DriverCommandTransformVisitor;
 import edu.kis.powp.jobs2d.drivers.ComplexDriver;
-import edu.kis.powp.jobs2d.drivers.canva.shapes.A4FormatCanva;
-import edu.kis.powp.jobs2d.drivers.canva.shapes.CanvaShape;
-import edu.kis.powp.jobs2d.drivers.canva.shapes.CircularCanva;
-import edu.kis.powp.jobs2d.drivers.canva.shapes.RectangleCanva;
+import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
+import edu.kis.powp.jobs2d.canva.shapes.CircularCanva;
+import edu.kis.powp.jobs2d.canva.shapes.RectangleCanva;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverLoggingMonitor;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverMonitorDecorator;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverUsageMonitor;
@@ -28,6 +30,12 @@ import edu.kis.powp.jobs2d.features.*;
 import edu.kis.powp.jobs2d.transformations.FlipTransformation;
 import edu.kis.powp.jobs2d.transformations.RotateTransformation;
 import edu.kis.powp.jobs2d.transformations.ScaleTransformation;
+import edu.kis.powp.jobs2d.features.ClicksConverter;
+import edu.kis.powp.jobs2d.features.CommandsFeature;
+import edu.kis.powp.jobs2d.features.DrawerFeature;
+import edu.kis.powp.jobs2d.features.DriverFeature;
+import edu.kis.powp.jobs2d.features.WorkspaceFeature;
+
 
 public class TestJobs2dApp {
     private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -109,14 +117,16 @@ public class TestJobs2dApp {
     }
 
     private static void setupWorkspaces() {
-        CanvaShape boundRectangle = new RectangleCanva(400, 400);
-        WorkspaceFeature.addWorkspaceShape("Rectangle canvas", boundRectangle);
+        Map<String, CanvaShape> workspaceShapes = new HashMap<>();
+        workspaceShapes.put("Rectangle canvas", new RectangleCanva(400, 400));
+        workspaceShapes.put("A4 format canvas", RectangleCanvaFactory.getVerticalA4Canva());
+        workspaceShapes.put("My Circular canvas", new CircularCanva(200));
+        workspaceShapes.put("Letter canvas", RectangleCanvaFactory.getLetterCanva());
+        workspaceShapes.put("A3 canvas", RectangleCanvaFactory.getVerticalA3Canva());
 
-        CanvaShape boundA4Format = new A4FormatCanva();
-        WorkspaceFeature.addWorkspaceShape("A4 format canvas", boundA4Format);
-
-        CanvaShape boundCircular = new CircularCanva(200);
-        WorkspaceFeature.addWorkspaceShape("My Circular canvas", boundCircular);
+        for (Map.Entry<String, CanvaShape> entry : workspaceShapes.entrySet()) {
+            WorkspaceFeature.addWorkspaceShape(entry.getKey(), entry.getValue());
+        }
     }
 
     private static void setupWindows(Application application) {
