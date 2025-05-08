@@ -1,10 +1,9 @@
 package edu.kis.powp.jobs2d.transformations;
-import edu.kis.powp.jobs2d.Job2dDriver;
 
-public class RotateTransformationDecorator implements PointTransformation {
+public class RotateTransformation implements PointTransformation {
     private final double cos, sin;
 
-    public RotateTransformationDecorator(double degrees) {
+    public RotateTransformation(double degrees) {
         double radians = Math.toRadians(degrees);
         this.cos = Math.cos(radians);
         this.sin = Math.sin(radians);

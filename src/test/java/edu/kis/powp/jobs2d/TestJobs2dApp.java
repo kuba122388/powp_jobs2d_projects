@@ -2,6 +2,8 @@ package edu.kis.powp.jobs2d;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,9 +25,9 @@ import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.events.*;
 import edu.kis.powp.jobs2d.features.*;
-import edu.kis.powp.jobs2d.transformations.FlipTransformationDecorator;
-import edu.kis.powp.jobs2d.transformations.RotateTransformationDecorator;
-import edu.kis.powp.jobs2d.transformations.ScaleTransformationDecorator;
+import edu.kis.powp.jobs2d.transformations.FlipTransformation;
+import edu.kis.powp.jobs2d.transformations.RotateTransformation;
+import edu.kis.powp.jobs2d.transformations.ScaleTransformation;
 
 public class TestJobs2dApp {
     private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -57,6 +59,20 @@ public class TestJobs2dApp {
         application.addTest("Run command", new SelectRunCurrentCommandOptionListener(DriverFeature.getDriverManager()));
 
         application.addTest("Count subcommands", (e) -> CountCommandsTest.execute());
+
+        TransformCurrentCommandOptionListener rot45flipX = new TransformCurrentCommandOptionListener(Arrays.asList(
+                new RotateTransformation(45),
+                new FlipTransformation(true, false)
+        ));
+
+        application.addTest("Transform: Rotate 45 & Flip X", rot45flipX);
+
+        TransformCurrentCommandOptionListener scale2flipY = new TransformCurrentCommandOptionListener(Arrays.asList(
+                new ScaleTransformation(2, 2),
+                new FlipTransformation(false, true)
+        ));
+
+        application.addTest("Transform: Scale 2x & Flip Y", scale2flipY);
     }
 
 
@@ -73,7 +89,7 @@ public class TestJobs2dApp {
         Job2dDriver basicLineDriver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
         DriverFeature.addDriver("Line Simulator", basicLineDriver);
         DriverFeature.getDriverManager().setCurrentDriver(basicLineDriver);
-        
+
         ComplexDriver complexDriver = new ComplexDriver();
         complexDriver.add(loggerDriver);
         complexDriver.add(basicLineDriver);
@@ -85,22 +101,11 @@ public class TestJobs2dApp {
         Job2dDriver driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
         DriverFeature.addDriver("Special line Simulator", driver);
 
-        DriverCommandTransformVisitor visitor = new DriverCommandTransformVisitor();
-        visitor.addTransformation(new RotateTransformationDecorator(45));
-        visitor.addTransformation(new FlipTransformationDecorator(true, false));
-        DriverFeature.addDriver("Rotated and flipped horizontally line Simulator", driver);
-
-        driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
-        visitor = new DriverCommandTransformVisitor();
-        visitor.addTransformation(new ScaleTransformationDecorator(2,2));
-        visitor.addTransformation(new FlipTransformationDecorator(false,true));
-        DriverFeature.addDriver("Scaled and flipped vertically special line Simulator", driver);
-
         DriverUsageMonitor usageMonitor = new DriverUsageMonitor();
         DriverLoggingMonitor loggingMonitor = new DriverLoggingMonitor();
         driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
         driver = new DriverMonitorDecorator(driver, usageMonitor, loggingMonitor);
-        DriverFeature.addDriver("Monitored Driver",driver);
+        DriverFeature.addDriver("Monitored Driver", driver);
     }
 
     private static void setupWorkspaces() {
@@ -122,7 +127,6 @@ public class TestJobs2dApp {
         CommandManagerWindowCommandChangeObserver windowObserver = new CommandManagerWindowCommandChangeObserver(
                 commandManager);
         CommandsFeature.getDriverCommandManager().getChangePublisher().addSubscriber(windowObserver);
-        application.addTest("Transform current command", new TransformCurrentCommandOptionListener());
     }
 
     /**
