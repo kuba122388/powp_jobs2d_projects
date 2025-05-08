@@ -3,7 +3,7 @@ package edu.kis.powp.jobs2d.drivers;
 import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.jobs2d.Job2dDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
-import edu.kis.powp.jobs2d.drivers.canva.shapes.CanvaShape;
+import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 
 public class WorkspaceManager {

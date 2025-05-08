@@ -8,13 +8,13 @@ import java.util.logging.Logger;
 import edu.kis.legacy.drawer.panel.DrawPanelController;
 import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.appbase.Application;
+import edu.kis.powp.jobs2d.canva.factories.RectangleCanvaFactory;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindow;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver;
 import edu.kis.powp.jobs2d.drivers.ComplexDriver;
-import edu.kis.powp.jobs2d.drivers.canva.shapes.A4FormatCanva;
-import edu.kis.powp.jobs2d.drivers.canva.shapes.CanvaShape;
-import edu.kis.powp.jobs2d.drivers.canva.shapes.CircularCanva;
-import edu.kis.powp.jobs2d.drivers.canva.shapes.RectangleCanva;
+import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
+import edu.kis.powp.jobs2d.canva.shapes.CircularCanva;
+import edu.kis.powp.jobs2d.canva.shapes.RectangleCanva;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverLoggingMonitor;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverMonitorDecorator;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverUsageMonitor;
@@ -105,11 +105,17 @@ public class TestJobs2dApp {
         CanvaShape boundRectangle = new RectangleCanva(400, 400);
         WorkspaceFeature.addWorkspaceShape("Rectangle canvas", boundRectangle);
 
-        CanvaShape boundA4Format = new A4FormatCanva();
+        CanvaShape boundA4Format = RectangleCanvaFactory.getVerticalA4Canva();
         WorkspaceFeature.addWorkspaceShape("A4 format canvas", boundA4Format);
 
         CanvaShape boundCircular = new CircularCanva(200);
         WorkspaceFeature.addWorkspaceShape("My Circular canvas", boundCircular);
+
+        CanvaShape boundLetter = RectangleCanvaFactory.getLetterCanva();
+        WorkspaceFeature.addWorkspaceShape("Letter canvas", boundLetter);
+
+        CanvaShape boundA3 = RectangleCanvaFactory.getVerticalA3Canva();
+        WorkspaceFeature.addWorkspaceShape("A3 canvas", boundA3);
     }
 
     private static void setupWindows(Application application) {
