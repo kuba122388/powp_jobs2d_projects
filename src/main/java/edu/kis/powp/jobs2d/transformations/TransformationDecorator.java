@@ -1,26 +1,21 @@
 package edu.kis.powp.jobs2d.transformations;
 
-import edu.kis.powp.jobs2d.drivers.AbstractDecorator;
-import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
+import java.util.ArrayList;
+import java.util.List;
 
-public abstract class TransformationDecorator extends AbstractDecorator {
+public class TransformationDecorator {
+    private final List<PointTransformation> transformations = new ArrayList<>();
 
-    public TransformationDecorator(VisitableJob2dDriver driver) {
-        super(driver);
+    public void addTransformation(PointTransformation transformation) {
+        transformations.add(transformation);
     }
 
-    protected abstract int[] transformation(int x, int y);
-
-    @Override
-    public void setPosition(int x, int y) {
-        int[] transformed = transformation(x, y);
-        driver.setPosition(transformed[0], transformed[1]);
+    public int[] transform(int x, int y) {
+        for (PointTransformation t : transformations) {
+            int[] result = t.transformation(x, y);
+            x = result[0];
+            y = result[1];
+        }
+        return new int[]{x, y};
     }
-
-    @Override
-    public void operateTo(int x, int y) {
-        int[] transformed = transformation(x, y);
-        driver.operateTo(transformed[0], transformed[1]);
-    }
-
 }
