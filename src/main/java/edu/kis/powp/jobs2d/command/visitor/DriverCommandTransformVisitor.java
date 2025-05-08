@@ -1,6 +1,13 @@
 package edu.kis.powp.jobs2d.command.visitor;
 
+import edu.kis.powp.jobs2d.Job2dDriver;
 import edu.kis.powp.jobs2d.command.*;
+import edu.kis.powp.jobs2d.drivers.CoordinateExtractingDriver;
+import edu.kis.powp.jobs2d.transformations.FlipTransformationDecorator;
+import edu.kis.powp.jobs2d.transformations.RotateTransformationDecorator;
+import edu.kis.powp.jobs2d.transformations.ScaleTransformationDecorator;
+import edu.kis.powp.jobs2d.transformations.TranslateTransformationDecorator;
+import sun.tools.jstat.Scale;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +18,8 @@ public class DriverCommandTransformVisitor implements DriverCommandVisitor {
     private double translateX = 0.0;
     private double translateY = 0.0;
     private double rotation = 0.0;
+    private boolean flipHorizontal = false;
+    private boolean flipVertical = false;
 
     private final List<DriverCommand> transformedCommands = new ArrayList<>();
 
@@ -19,17 +28,16 @@ public class DriverCommandTransformVisitor implements DriverCommandVisitor {
     }
 
     private int[] apply(int x, int y) {
-        double newX = x * scaleX;
-        double newY = y * scaleY;
+        CoordinateExtractingDriver coordDriver = new CoordinateExtractingDriver();
+        Job2dDriver driver = coordDriver;
 
-        double radians = Math.toRadians(rotation);
-        double rotatedX = newX * Math.cos(radians) - newY * Math.sin(radians);
-        double rotatedY = newX * Math.sin(radians) + newY * Math.cos(radians);
+        driver = new ScaleTransformationDecorator(driver, scaleX, scaleY);
+        driver = new TranslateTransformationDecorator(driver, translateX, translateY);
+        driver = new RotateTransformationDecorator(driver, rotation);
+        driver = new FlipTransformationDecorator(driver, flipHorizontal, flipVertical);
 
-        rotatedX += translateX;
-        rotatedY += translateY;
-
-        return new int[] {(int) Math.round(rotatedX), (int) Math.round(rotatedY)};
+        driver.setPosition(x, y);
+        return coordDriver.getLastPosition();
     }
 
     @Override
@@ -69,5 +77,13 @@ public class DriverCommandTransformVisitor implements DriverCommandVisitor {
     
     public void setRotation(double rotation) {
         this.rotation = rotation;
+    }
+
+    public void setFlipHorizontal(boolean flipHorizontal) {
+        this.flipHorizontal = flipHorizontal;
+    }
+
+    public void setFlipVertical(boolean flipVertical) {
+        this.flipVertical = flipVertical;
     }
 }
