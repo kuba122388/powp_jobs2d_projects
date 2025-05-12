@@ -28,6 +28,7 @@ import edu.kis.powp.jobs2d.features.CommandsFeature;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 import edu.kis.powp.jobs2d.features.DriverFeature;
 import edu.kis.powp.jobs2d.features.WorkspaceFeature;
+import edu.kis.powp.jobs2d.plugin.FeatureManager;
 import edu.kis.powp.jobs2d.transformations.FlipTransformationDecorator;
 import edu.kis.powp.jobs2d.transformations.RotateTransformationDecorator;
 import edu.kis.powp.jobs2d.transformations.ScaleTransformationDecorator;
@@ -153,6 +154,15 @@ public class TestJobs2dApp {
         new ClicksConverter(application.getFreePanel());
     }
 
+    public static void setup(Application application) {
+        FeatureManager.registerFeature(new DriverFeature());
+        FeatureManager.registerFeature(new WorkspaceFeature());
+        FeatureManager.registerFeature(new DrawerFeature());
+        FeatureManager.registerFeature(new CommandsFeature());
+
+        FeatureManager.initializeAll(application);
+    }
+
     /**
      * Launch the application.
      */
@@ -160,6 +170,7 @@ public class TestJobs2dApp {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 Application app = new Application("Jobs 2D");
+                setup(app);
                 DrawerFeature.setupDrawerPlugin(app);
                 CommandsFeature.setupCommandManager();
 

@@ -5,8 +5,9 @@ import edu.kis.powp.jobs2d.Job2dDriver;
 import edu.kis.powp.jobs2d.drivers.DriverManager;
 import edu.kis.powp.jobs2d.drivers.SelectDriverMenuOptionListener;
 import edu.kis.powp.jobs2d.drivers.observers.DriverLabelChangeObserver;
+import edu.kis.powp.jobs2d.plugin.FeaturePlugin;
 
-public class DriverFeature {
+public class DriverFeature implements FeaturePlugin {
 
     private static DriverManager driverManager = new DriverManager();
     private static Application app;
@@ -26,6 +27,11 @@ public class DriverFeature {
 
         DriverLabelChangeObserver driverLabelChangeObserver = new DriverLabelChangeObserver(application);
         driverManager.getChangePublisher().addSubscriber(driverLabelChangeObserver);
+    }
+
+    @Override
+    public void setup(Application application) {
+        setupDriverPlugin(application);
     }
 
     /**
