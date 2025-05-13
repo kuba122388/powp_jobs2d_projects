@@ -15,7 +15,6 @@ import edu.kis.powp.appbase.Application;
 import edu.kis.powp.jobs2d.canva.factories.RectangleCanvaFactory;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindow;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver;
-import edu.kis.powp.jobs2d.command.visitor.DriverCommandTransformVisitor;
 import edu.kis.powp.jobs2d.drivers.ComplexDriver;
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
 import edu.kis.powp.jobs2d.canva.shapes.CircularCanva;
@@ -35,6 +34,7 @@ import edu.kis.powp.jobs2d.features.CommandsFeature;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 import edu.kis.powp.jobs2d.features.DriverFeature;
 import edu.kis.powp.jobs2d.features.WorkspaceFeature;
+import edu.kis.powp.jobs2d.transformations.TranslateTransformation;
 
 
 public class TestJobs2dApp {
@@ -68,19 +68,11 @@ public class TestJobs2dApp {
 
         application.addTest("Count subcommands", (e) -> CountCommandsTest.execute());
 
-        TransformCurrentCommandOptionListener rot45flipX = new TransformCurrentCommandOptionListener(Arrays.asList(
-                new RotateTransformation(45),
-                new FlipTransformation(true, false)
-        ));
-
-        application.addTest("Transform: Rotate 45 & Flip X", rot45flipX);
-
-        TransformCurrentCommandOptionListener scale2flipY = new TransformCurrentCommandOptionListener(Arrays.asList(
-                new ScaleTransformation(2, 2),
-                new FlipTransformation(false, true)
-        ));
-
-        application.addTest("Transform: Scale 2x & Flip Y", scale2flipY);
+        application.addTest("Transform: Rotate 45", new TransformCurrentCommandOptionListener(new RotateTransformation(45)));
+        application.addTest("Transform: Scale 2x", new TransformCurrentCommandOptionListener(new ScaleTransformation(2, 2)));
+        application.addTest("Transform: Move by (50, 25)", new TransformCurrentCommandOptionListener(new TranslateTransformation(50, 25)));
+        application.addTest("Transform: Flip Horizontal", new TransformCurrentCommandOptionListener(new FlipTransformation(true,false)));
+        application.addTest("Transform: Flip Vertical", new TransformCurrentCommandOptionListener(new FlipTransformation(false, true)));
     }
 
 
