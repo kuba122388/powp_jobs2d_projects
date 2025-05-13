@@ -1,9 +1,10 @@
 package edu.kis.powp.jobs2d.transformations;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransformationComposite {
+public class TransformationComposite{
     private final List<PointTransformation> transformations = new ArrayList<>();
 
     public void addTransformation(PointTransformation transformation) {
@@ -17,5 +18,13 @@ public class TransformationComposite {
             y = result[1];
         }
         return new int[]{x, y};
+    }
+
+    public String getTransformationNames() {
+        StringBuilder transformationNames = new StringBuilder();
+        for (PointTransformation t : transformations) {
+            transformationNames.append(t.getName() + " ");
+        }
+        return transformationNames.toString();
     }
 }

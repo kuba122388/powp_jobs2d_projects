@@ -11,10 +11,10 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class TransformCurrentCommandOptionListener implements ActionListener {
-    private final List<PointTransformation> transformations;
+    private final PointTransformation transformation;
 
-    public TransformCurrentCommandOptionListener(List<PointTransformation> transformations) {
-        this.transformations = transformations;
+    public TransformCurrentCommandOptionListener(PointTransformation transformations) {
+        this.transformation = transformations;
     }
 
     @Override
@@ -26,9 +26,16 @@ public class TransformCurrentCommandOptionListener implements ActionListener {
         }
 
         DriverCommandTransformVisitor visitor = new DriverCommandTransformVisitor();
-        transformations.forEach(visitor::addTransformation);
-        currentCommand.accept(visitor);
-        CommandsFeature.getDriverCommandManager().setCurrentCommand(visitor.getTransformedCommands(), "Transformed Command");
+        visitor.addTransformation(transformation);
+
+        List<DriverCommand> transformed = visitor.getTransformedCommands(currentCommand);
+
+
+        String originalName = CommandsFeature.getDriverCommandManager().getCurrentCommandString();
+        String newName = visitor.getTransformationNames() + (originalName != null ? originalName : "Unnamed");
+
+        CommandsFeature.getDriverCommandManager().setCurrentCommand(transformed, newName);
+
         System.out.println("Command transformed and updated.");
     }
 }

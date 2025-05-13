@@ -14,8 +14,10 @@ public class DriverCommandTransformVisitor implements DriverCommandVisitor {
         transformer.addTransformation(transformation);
     }
 
-    public List<DriverCommand> getTransformedCommands() {
-        return transformedCommands;
+    public List<DriverCommand> getTransformedCommands(DriverCommand command) {
+        transformedCommands.clear();
+        command.accept(this);
+        return new ArrayList<>(transformedCommands);
     }
 
     @Override
@@ -36,4 +38,9 @@ public class DriverCommandTransformVisitor implements DriverCommandVisitor {
             c.accept(this);
         }
     }
+
+    public String getTransformationNames() {
+        return transformer.getTransformationNames();
+    }
+
 }

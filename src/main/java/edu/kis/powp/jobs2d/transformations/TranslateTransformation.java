@@ -15,4 +15,9 @@ public class TranslateTransformation implements PointTransformation {
         int newY = (int) Math.round(y + translateY);
         return new int[] { newX, newY };
     }
+
+    @Override
+    public String getName() {
+        return "Moved X: " + translateX + ", Y: " + translateY;
+    }
 }

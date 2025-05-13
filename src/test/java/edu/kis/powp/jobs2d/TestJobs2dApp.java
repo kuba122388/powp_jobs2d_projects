@@ -37,6 +37,8 @@ import edu.kis.powp.jobs2d.plugin.FeatureManager;
 import edu.kis.powp.jobs2d.transformations.FlipTransformationDecorator;
 import edu.kis.powp.jobs2d.transformations.RotateTransformationDecorator;
 import edu.kis.powp.jobs2d.transformations.ScaleTransformationDecorator;
+import edu.kis.powp.jobs2d.transformations.TranslateTransformation;
+
 
 public class TestJobs2dApp {
     private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -70,6 +72,12 @@ public class TestJobs2dApp {
         application.addTest("Count subcommands", (e) -> CountCommandsTest.execute());
         application.addTest("Count drivers", (e) -> CountDriversTest.execute());
 
+
+        application.addTest("Transform: Rotate 45", new TransformCurrentCommandOptionListener(new RotateTransformation(45)));
+        application.addTest("Transform: Scale 2x", new TransformCurrentCommandOptionListener(new ScaleTransformation(2, 2)));
+        application.addTest("Transform: Move by (50, 25)", new TransformCurrentCommandOptionListener(new TranslateTransformation(50, 25)));
+        application.addTest("Transform: Flip Horizontal", new TransformCurrentCommandOptionListener(new FlipTransformation(true,false)));
+        application.addTest("Transform: Flip Vertical", new TransformCurrentCommandOptionListener(new FlipTransformation(false, true)));
     }
 
 
@@ -86,7 +94,7 @@ public class TestJobs2dApp {
         VisitableJob2dDriver basicLineDriver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
         DriverFeature.addDriver("Line Simulator", basicLineDriver);
         DriverFeature.getDriverManager().setCurrentDriver(basicLineDriver);
-        
+
         ComplexDriver complexDriver = new ComplexDriver();
         complexDriver.add(loggerDriver);
         complexDriver.add(basicLineDriver);

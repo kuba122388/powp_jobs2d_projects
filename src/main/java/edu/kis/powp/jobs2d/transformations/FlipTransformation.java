@@ -13,6 +13,12 @@ public class FlipTransformation implements PointTransformation {
     public int[] transformation(int x, int y) {
         int newX = flipHorizontal ? -x : x;
         int newY = flipVertical ? -y : y;
-        return new int[] { newX, newY };
+        return new int[]{newX, newY};
+    }
+
+    @Override
+    public String getName() {
+        return (flipHorizontal && flipVertical) ? "Flip: (H) & (V)" :
+                flipVertical ? "Flip: (V)" : flipHorizontal ? "Flip: (H)" : "";
     }
 }

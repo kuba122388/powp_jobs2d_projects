@@ -15,4 +15,9 @@ public class ScaleTransformation implements PointTransformation {
         int newY = (int) Math.round(scaleY * y);
         return new int[] { newX, newY };
     }
+
+    @Override
+    public String getName() {
+        return "Scale X: " + scaleX + ", Y: " + scaleY;
+    }
 }
