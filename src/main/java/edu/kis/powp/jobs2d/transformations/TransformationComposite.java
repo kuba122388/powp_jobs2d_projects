@@ -3,7 +3,7 @@ package edu.kis.powp.jobs2d.transformations;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransformationDecorator {
+public class TransformationComposite {
     private final List<PointTransformation> transformations = new ArrayList<>();
 
     public void addTransformation(PointTransformation transformation) {

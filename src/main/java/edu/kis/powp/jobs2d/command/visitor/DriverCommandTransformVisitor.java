@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DriverCommandTransformVisitor implements DriverCommandVisitor {
     private final List<DriverCommand> transformedCommands = new ArrayList<>();
-    private final TransformationDecorator transformer = new TransformationDecorator();
+    private final TransformationComposite transformer = new TransformationComposite();
 
     public void addTransformation(PointTransformation transformation) {
         transformer.addTransformation(transformation);
