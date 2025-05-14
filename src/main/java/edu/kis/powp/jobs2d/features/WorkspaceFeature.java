@@ -2,15 +2,11 @@ package edu.kis.powp.jobs2d.features;
 
 import edu.kis.powp.appbase.Application;
 
-import edu.kis.powp.jobs2d.LoggerDriver;
+import edu.kis.powp.jobs2d.Job2dDriver;
 import edu.kis.powp.jobs2d.drivers.SelectWorkspaceMenuOptionListener;
 import edu.kis.powp.jobs2d.drivers.WorkspaceManager;
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 
 /**
@@ -22,9 +18,13 @@ import java.util.logging.Logger;
  */
 public class WorkspaceFeature {
     private static Application app;
-    private static WorkspaceManager workspaceManager = new WorkspaceManager();
+    private static WorkspaceManager workspaceManager = new WorkspaceManager(DriverFeature.getDriverManager().getCurrentDriver());
     private static boolean cutOutstandingLines = false;
 
+
+    public static void updateDriver(Job2dDriver driver) {
+        workspaceManager.updateDriver(driver);
+    }
 
     /**
      * Initializes the workspace plugin by adding a "Workspaces" component menu to the application.
@@ -39,6 +39,7 @@ public class WorkspaceFeature {
         app.addComponentMenuElement(WorkspaceFeature.class, "Toggle cutting lines", e -> {
             cutOutstandingLines = !cutOutstandingLines;
             logger.info("Cutting lines: " + (cutOutstandingLines ? "ENABLED" : "DISABLED"));
+            workspaceManager.changeLineClipeed();
         });
     }
 
@@ -47,7 +48,7 @@ public class WorkspaceFeature {
      *
      * @return the {@code WorkspaceManager} managing the current canvas shape
      */
-    public WorkspaceManager getWorkspaceManager() {
+    public static WorkspaceManager getWorkspaceManager() {
         return workspaceManager;
     }
 

@@ -17,6 +17,7 @@ import edu.kis.powp.jobs2d.drivers.ComplexDriver;
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
 import edu.kis.powp.jobs2d.canva.shapes.CircularCanva;
 import edu.kis.powp.jobs2d.canva.shapes.RectangleCanva;
+import edu.kis.powp.jobs2d.drivers.WorkspaceManager;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverLoggingMonitor;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverMonitorDecorator;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverUsageMonitor;
@@ -80,6 +81,7 @@ public class TestJobs2dApp {
         complexDriver.add(basicLineDriver);
 
         DriverFeature.addDriver("Line & Logger (Composite)", complexDriver);
+        WorkspaceManager.updateDriver(basicLineDriver);
 
         DriverFeature.getDriverManager().setCurrentDriver(basicLineDriver);
 
