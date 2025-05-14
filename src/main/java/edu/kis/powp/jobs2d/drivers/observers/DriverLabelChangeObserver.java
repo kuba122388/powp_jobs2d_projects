@@ -2,7 +2,10 @@ package edu.kis.powp.jobs2d.drivers.observers;
 
 import edu.kis.powp.appbase.Application;
 import edu.kis.powp.jobs2d.Job2dDriver;
+import edu.kis.powp.jobs2d.drivers.DriverManager;
+import edu.kis.powp.jobs2d.drivers.WorkspaceManager;
 import edu.kis.powp.jobs2d.features.DriverFeature;
+import edu.kis.powp.jobs2d.features.WorkspaceFeature;
 import edu.kis.powp.observer.Subscriber;
 
 
