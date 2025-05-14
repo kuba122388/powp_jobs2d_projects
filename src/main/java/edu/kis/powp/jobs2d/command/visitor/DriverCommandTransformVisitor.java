@@ -22,13 +22,13 @@ public class DriverCommandTransformVisitor implements DriverCommandVisitor {
 
     @Override
     public void visit(SetPositionCommand command) {
-        int[] coords = transformer.transform(command.getX(), command.getY());
+        int[] coords = transformer.transformation(command.getX(), command.getY());
         transformedCommands.add(new SetPositionCommand(coords[0], coords[1]));
     }
 
     @Override
     public void visit(OperateToCommand command) {
-        int[] coords = transformer.transform(command.getX(), command.getY());
+        int[] coords = transformer.transformation(command.getX(), command.getY());
         transformedCommands.add(new OperateToCommand(coords[0], coords[1]));
     }
 
@@ -40,7 +40,7 @@ public class DriverCommandTransformVisitor implements DriverCommandVisitor {
     }
 
     public String getTransformationNames() {
-        return transformer.getTransformationNames();
+        return transformer.getName();
     }
 
 }
