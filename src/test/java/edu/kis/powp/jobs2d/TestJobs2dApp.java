@@ -2,8 +2,6 @@ package edu.kis.powp.jobs2d;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
-import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -25,16 +23,12 @@ import edu.kis.powp.jobs2d.drivers.monitoring.DriverUsageMonitor;
 import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.events.*;
-import edu.kis.powp.jobs2d.features.*;
-import edu.kis.powp.jobs2d.transformations.FlipTransformation;
-import edu.kis.powp.jobs2d.transformations.RotateTransformation;
-import edu.kis.powp.jobs2d.transformations.ScaleTransformation;
 import edu.kis.powp.jobs2d.features.ClicksConverter;
 import edu.kis.powp.jobs2d.features.CommandsFeature;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 import edu.kis.powp.jobs2d.features.DriverFeature;
 import edu.kis.powp.jobs2d.features.WorkspaceFeature;
-import edu.kis.powp.jobs2d.transformations.TranslateTransformation;
+import edu.kis.powp.jobs2d.transformations.*;
 
 
 public class TestJobs2dApp {
@@ -100,6 +94,22 @@ public class TestJobs2dApp {
 
         Job2dDriver driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
         DriverFeature.addDriver("Special line Simulator", driver);
+
+        TransformationComposite composite = new TransformationComposite();
+        composite.addTransformation(new RotateTransformation(45));
+        composite.addTransformation(new FlipTransformation(true, false));
+
+        driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "special");
+        driver = new TransformationDriverDecorator(driver, composite);
+        DriverFeature.addDriver("Rotated and flipped horizontally line Simulator", driver);
+
+        TransformationComposite composite2 = new TransformationComposite();
+        composite2.addTransformation(new ScaleTransformation(2, 2));
+        composite2.addTransformation(new FlipTransformation(false, true));
+
+        driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
+        driver = new TransformationDriverDecorator(driver, composite2);
+        DriverFeature.addDriver("Scaled and flipped vertically special line Simulator", driver);
 
         DriverUsageMonitor usageMonitor = new DriverUsageMonitor();
         DriverLoggingMonitor loggingMonitor = new DriverLoggingMonitor();

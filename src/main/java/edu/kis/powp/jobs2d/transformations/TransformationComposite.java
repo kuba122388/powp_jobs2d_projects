@@ -4,14 +4,14 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransformationComposite{
+public class TransformationComposite implements PointTransformation{
     private final List<PointTransformation> transformations = new ArrayList<>();
 
     public void addTransformation(PointTransformation transformation) {
         transformations.add(transformation);
     }
 
-    public int[] transform(int x, int y) {
+    public int[] transformation(int x, int y) {
         for (PointTransformation t : transformations) {
             int[] result = t.transformation(x, y);
             x = result[0];
@@ -20,7 +20,8 @@ public class TransformationComposite{
         return new int[]{x, y};
     }
 
-    public String getTransformationNames() {
+    @Override
+    public String getName() {
         StringBuilder transformationNames = new StringBuilder();
         for (PointTransformation t : transformations) {
             transformationNames.append(t.getName() + " ");
