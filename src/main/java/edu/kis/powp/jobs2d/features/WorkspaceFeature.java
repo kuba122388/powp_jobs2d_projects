@@ -36,10 +36,10 @@ public class WorkspaceFeature {
         app.addComponentMenu(WorkspaceFeature.class, "Workspaces");
 
         Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-        app.addComponentMenuElement(WorkspaceFeature.class, "Toggle cutting lines", e -> {
+        app.addComponentMenuElementWithCheckBox(WorkspaceFeature.class, "Toggle cutting lines", e -> {
             cutOutstandingLines = !cutOutstandingLines;
             logger.info("Cutting lines: " + (cutOutstandingLines ? "ENABLED" : "DISABLED"));
-        });
+        }, false);
     }
 
     /**
