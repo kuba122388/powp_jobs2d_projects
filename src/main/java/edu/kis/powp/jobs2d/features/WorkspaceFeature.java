@@ -39,7 +39,7 @@ public class WorkspaceFeature {
         app.addComponentMenuElementWithCheckBox(WorkspaceFeature.class, "Toggle cutting lines", e -> {
             cutOutstandingLines = !cutOutstandingLines;
             logger.info("Cutting lines: " + (cutOutstandingLines ? "ENABLED" : "DISABLED"));
-        }, false);
+        },false);
     }
 
     /**
