@@ -171,13 +171,8 @@ public class TestJobs2dApp {
             public void run() {
                 Application app = new Application("Jobs 2D");
                 setup(app);
-                DrawerFeature.setupDrawerPlugin(app);
-                CommandsFeature.setupCommandManager();
-
-                DriverFeature.setupDriverPlugin(app);
                 setupDrivers(app);
 
-                WorkspaceFeature.setupWorkspacePlugin(app);
                 setupWorkspaces();
 
                 setupPresetTests(app);
