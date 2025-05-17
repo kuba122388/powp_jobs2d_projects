@@ -5,6 +5,7 @@ import edu.kis.powp.appbase.Application;
 import edu.kis.powp.jobs2d.drivers.SelectWorkspaceMenuOptionListener;
 import edu.kis.powp.jobs2d.drivers.WorkspaceManager;
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
+import edu.kis.powp.jobs2d.plugin.FeaturePlugin;
 
 /**
  * Provides functionality for integrating workspace shape selection into the application UI.
@@ -13,7 +14,7 @@ import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
  * predefined {@link CanvaShape} instances through menu options. It holds a shared {@link WorkspaceManager}
  * instance to manage the currently active workspace shape.
  */
-public class WorkspaceFeature {
+public class WorkspaceFeature implements FeaturePlugin {
     private static Application app;
     private static WorkspaceManager workspaceManager = new WorkspaceManager();
 
@@ -25,6 +26,11 @@ public class WorkspaceFeature {
     public static void setupWorkspacePlugin(Application application) {
         app = application;
         app.addComponentMenu(WorkspaceFeature.class, "Workspaces");
+    }
+
+    @Override
+    public void setup(Application application) {
+        setupWorkspacePlugin(application);
     }
 
     /**
