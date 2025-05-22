@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  */
 public class WorkspaceFeature implements FeaturePlugin {
     private static Application app;
-    private static WorkspaceManager workspaceManager = new WorkspaceManager(DriverFeature.getDriverManager().getCurrentDriver());
+    private static WorkspaceManager workspaceManager;
     private static boolean cutOutstandingLines = false;
 
 
@@ -33,6 +33,7 @@ public class WorkspaceFeature implements FeaturePlugin {
      * @param application the main {@link Application} instance to which the plugin is attached
      */
     public static void setupWorkspacePlugin(Application application) {
+        workspaceManager = new WorkspaceManager(DriverFeature.getDriverManager().getCurrentDriver());
         app = application;
         app.addComponentMenu(WorkspaceFeature.class, "Workspaces");
 
