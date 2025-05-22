@@ -21,6 +21,6 @@ public class FlipTransformationDecorator extends TransformationDecorator {
 
     @Override
     public void accept(DriverVisitor visitor) {
-        
+        visitor.visit(this);
     }
 }
