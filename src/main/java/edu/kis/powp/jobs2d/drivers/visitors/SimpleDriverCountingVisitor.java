@@ -5,6 +5,7 @@ import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverMonitorDecorator;
+import edu.kis.powp.jobs2d.transformations.FlipTransformationDecorator;
 import edu.kis.powp.jobs2d.transformations.RotateTransformationDecorator;
 import edu.kis.powp.jobs2d.transformations.ScaleTransformationDecorator;
 
@@ -13,42 +14,44 @@ public class SimpleDriverCountingVisitor implements DriverVisitor {
 
     @Override
     public void visit(ComplexDriver driver) {
-        total = 0;
         for (VisitableJob2dDriver children : driver.getChildren()) {
             children.accept(this);
-            total++;
         }
+        total++;
     }
 
     @Override
     public void visit(InformativeLoggerDriver driver) {
-        total = 1;
+        total++;
     }
 
     @Override
     public void visit(LineDriverAdapter driver) {
-        total = 1;
+        total++;
     }
 
     @Override
     public void visit(RotateTransformationDecorator decorator) {
-        total = 0;
-        decorator.accept(this);
-        ++total;
+        decorator.getDriver().accept(this);
+        total++;
     }
 
     @Override
     public void visit(ScaleTransformationDecorator decorator) {
-        total = 0;
-        decorator.accept(this);
-        ++total;
+        decorator.getDriver().accept(this);
+        total++;
+    }
+
+    @Override
+    public void visit(FlipTransformationDecorator decorator){
+        decorator.getDriver().accept(this);
+        total++;
     }
 
     @Override
     public void visit(DriverMonitorDecorator decorator) {
-        total = 0;
         decorator.accept(this);
-        ++total;
+        total++;
     }
 
     public int getTotal() {
