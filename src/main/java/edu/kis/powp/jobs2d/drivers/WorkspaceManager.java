@@ -5,6 +5,7 @@ import edu.kis.powp.jobs2d.Job2dDriver;
 import edu.kis.powp.jobs2d.canva.ClippingJobs2dDriverDecorator;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
+import edu.kis.powp.jobs2d.drivers.observers.WorkspaceDriverChangeObserver;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 import edu.kis.powp.jobs2d.features.DriverFeature;
 
@@ -42,6 +43,8 @@ public class WorkspaceManager {
     public synchronized void setWorkspaceCanvaShape(CanvaShape canvaShape) {
         clipper.setCanvaShape(canvaShape);
         canvaShape.draw(borderDriver);
+        WorkspaceDriverChangeObserver observer = new WorkspaceDriverChangeObserver();
+        DriverFeature.getDriverManager().getChangePublisher().addSubscriber(observer);
     }
 
     /**
