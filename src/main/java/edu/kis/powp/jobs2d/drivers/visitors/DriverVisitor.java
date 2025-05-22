@@ -1,5 +1,6 @@
 package edu.kis.powp.jobs2d.drivers.visitors;
 
+import edu.kis.powp.jobs2d.canva.ClippingJobs2dDriverDecorator;
 import edu.kis.powp.jobs2d.drivers.ComplexDriver;
 import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
@@ -16,4 +17,5 @@ public interface DriverVisitor {
     void visit(ScaleTransformationDecorator decorator);
     void visit(DriverMonitorDecorator decorator);
     void visit(FlipTransformationDecorator decorator);
+    void visit(ClippingJobs2dDriverDecorator decorator);
 }
