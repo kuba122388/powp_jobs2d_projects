@@ -45,13 +45,12 @@ public class WorkspaceManager {
     }
 
     /**
-     * Returns the current canvas shape set for the workspace.
+     * Returns the clipping decorator used to enforce drawing within the canvas shape.
+     * <p>
+     * This driver can be registered as the main driver to ensure clipping is respected
+     * during user or programmatic drawing operations.
      *
-     * @return the currently active {@link CanvaShape}, or {@code null} if none is set
+     * @return the {@link ClippingJobs2dDriverDecorator} used for clipping logic
      */
-    public CanvaShape getCurrentCanvaShape() {
-        return clipper.getCanvasShape();
-    }
-
     public ClippingJobs2dDriverDecorator getClipper() { return clipper; }
 }
