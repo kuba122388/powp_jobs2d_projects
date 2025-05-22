@@ -2,44 +2,34 @@ package edu.kis.powp.jobs2d.drivers;
 
 import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.jobs2d.Job2dDriver;
+import edu.kis.powp.jobs2d.canva.ClippingJobs2dDriverDecorator;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
+import edu.kis.powp.jobs2d.features.DriverFeature;
+
 /**
  * Manages the current drawing workspace by handling the canvas shape and its visual representation.
  * <p>
  * This class allows setting a {@link CanvaShape} to represent the workspace area,
  * and automatically renders its border using a special {@link Job2dDriver}.
  */
-public class WorkspaceManager implements Job2dDriver {
-    private CanvaShape currentCanvaShape;
+public class WorkspaceManager {
+    private final ClippingJobs2dDriverDecorator clipper;
     private final Job2dDriver borderDriver;
-    private boolean orClipeLine;
-    private static Job2dDriver innerDriver;
-
-    private int currentX,  currentY;
 
     /**
      * Constructs a new {@code WorkspaceManager} with a preconfigured border drawing driver.
      * <p>
      * The border driver uses a dotted line and is labeled "border".
      */
-    public WorkspaceManager(Job2dDriver innerDriver) {
+    public WorkspaceManager() {
         borderDriver = new LineDriverAdapter(
                 DrawerFeature.getDrawerController(),
                 LineFactory.getDottedLine(),
                 "border"
         );
-
-        WorkspaceManager.innerDriver = innerDriver;
-    }
-
-    public static void updateDriver(Job2dDriver newDriver) {
-        innerDriver = newDriver;
-    }
-
-    public void changeLineClipeed() {
-        this.orClipeLine = !this.orClipeLine;
+        clipper = new ClippingJobs2dDriverDecorator(DriverFeature.getDriverManager().getCurrentDriver());
     }
 
     /**
@@ -50,7 +40,7 @@ public class WorkspaceManager implements Job2dDriver {
      * @param canvaShape the {@link CanvaShape} to be used as the current workspace area
      */
     public synchronized void setWorkspaceCanvaShape(CanvaShape canvaShape) {
-        this.currentCanvaShape = canvaShape;
+        clipper.setCanvaShape(canvaShape);
         canvaShape.draw(borderDriver);
     }
 
@@ -60,42 +50,8 @@ public class WorkspaceManager implements Job2dDriver {
      * @return the currently active {@link CanvaShape}, or {@code null} if none is set
      */
     public CanvaShape getCurrentCanvaShape() {
-        return currentCanvaShape;
+        return clipper.getCanvasShape();
     }
 
-    @Override
-    public void setPosition(int x, int y) {
-        if ( innerDriver == null )
-            return;
-
-        int[] clipped = clipPointToBounds(x, y);
-        currentX = clipped[0];
-        currentY = clipped[1];
-        innerDriver.setPosition(currentX,  currentY);
-    }
-
-    @Override
-    public void operateTo(int x, int y) {
-        if ( innerDriver == null )
-            return;
-        int[] clipped;
-        if( orClipeLine ) {
-            clipped = clipPointToBounds(x, y);
-        }
-        else {
-            clipped = new int[] {x, y};
-        }
-
-        currentX = clipped[0];
-        currentY = clipped[1];
-        innerDriver.operateTo(currentX,  currentY);
-    }
-
-    private int[] clipPointToBounds(int x, int y) {
-        if (currentCanvaShape.contains(x, y)) {
-            return new int[]{x, y};
-        } else {
-            return currentCanvaShape.clipLine(currentX,  currentY, x, y);
-        }
-    }
+    public ClippingJobs2dDriverDecorator getClipper() { return clipper; }
 }

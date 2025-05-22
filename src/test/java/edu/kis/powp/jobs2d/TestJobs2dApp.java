@@ -17,11 +17,11 @@ import edu.kis.powp.jobs2d.drivers.ComplexDriver;
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
 import edu.kis.powp.jobs2d.canva.shapes.CircularCanva;
 import edu.kis.powp.jobs2d.canva.shapes.RectangleCanva;
-import edu.kis.powp.jobs2d.drivers.WorkspaceManager;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverLoggingMonitor;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverMonitorDecorator;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverUsageMonitor;
 import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
+import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.events.*;
 import edu.kis.powp.jobs2d.features.ClicksConverter;
@@ -64,6 +64,7 @@ public class TestJobs2dApp {
         application.addTest("Run command", new SelectRunCurrentCommandOptionListener(DriverFeature.getDriverManager()));
 
         application.addTest("Count subcommands", (e) -> CountCommandsTest.execute());
+        application.addTest("Count drivers", (e) -> CountDriversTest.execute());
     }
 
 
@@ -73,11 +74,11 @@ public class TestJobs2dApp {
      * @param application Application context.
      */
     private static void setupDrivers(Application application) {
-        Job2dDriver loggerDriver = new InformativeLoggerDriver();
+        VisitableJob2dDriver loggerDriver = new InformativeLoggerDriver();
         DriverFeature.addDriver("Logger driver", loggerDriver);
 
         DrawPanelController drawerController = DrawerFeature.getDrawerController();
-        Job2dDriver basicLineDriver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
+        VisitableJob2dDriver basicLineDriver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
         DriverFeature.addDriver("Line Simulator", basicLineDriver);
         DriverFeature.getDriverManager().setCurrentDriver(basicLineDriver);
         
@@ -86,11 +87,10 @@ public class TestJobs2dApp {
         complexDriver.add(basicLineDriver);
 
         DriverFeature.addDriver("Line & Logger (Composite)", complexDriver);
-        WorkspaceManager.updateDriver(basicLineDriver);
 
         DriverFeature.getDriverManager().setCurrentDriver(basicLineDriver);
 
-        Job2dDriver driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
+        VisitableJob2dDriver driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");
         DriverFeature.addDriver("Special line Simulator", driver);
 
         driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "special");
@@ -158,8 +158,8 @@ public class TestJobs2dApp {
 
     public static void setup(Application application) {
         FeatureManager.registerFeature(new DriverFeature());
-        FeatureManager.registerFeature(new WorkspaceFeature());
         FeatureManager.registerFeature(new DrawerFeature());
+        FeatureManager.registerFeature(new WorkspaceFeature());
         FeatureManager.registerFeature(new CommandsFeature());
 
         FeatureManager.initializeAll(application);

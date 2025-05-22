@@ -3,6 +3,7 @@ package edu.kis.powp.jobs2d.features;
 import edu.kis.powp.appbase.Application;
 
 import edu.kis.powp.jobs2d.Job2dDriver;
+import edu.kis.powp.jobs2d.canva.ClippingJobs2dDriverDecorator;
 import edu.kis.powp.jobs2d.drivers.SelectWorkspaceMenuOptionListener;
 import edu.kis.powp.jobs2d.drivers.WorkspaceManager;
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
@@ -19,12 +20,11 @@ import java.util.logging.Logger;
  */
 public class WorkspaceFeature implements FeaturePlugin {
     private static Application app;
-    private static WorkspaceManager workspaceManager = new WorkspaceManager(DriverFeature.getDriverManager().getCurrentDriver());
-    private static boolean cutOutstandingLines = false;
+    private static WorkspaceManager workspaceManager;
 
 
     public static void updateDriver(Job2dDriver driver) {
-        workspaceManager.updateDriver(driver);
+        workspaceManager.getClipper().setInnerDriver(driver);
     }
 
     /**
@@ -33,13 +33,15 @@ public class WorkspaceFeature implements FeaturePlugin {
      * @param application the main {@link Application} instance to which the plugin is attached
      */
     public static void setupWorkspacePlugin(Application application) {
+        workspaceManager = new WorkspaceManager();
         app = application;
         app.addComponentMenu(WorkspaceFeature.class, "Workspaces");
 
         Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
         app.addComponentMenuElementWithCheckBox(WorkspaceFeature.class, "Toggle cutting lines", e -> {
-            cutOutstandingLines = !cutOutstandingLines;
-            logger.info("Cutting lines: " + (cutOutstandingLines ? "ENABLED" : "DISABLED"));
+            ClippingJobs2dDriverDecorator clipper = workspaceManager.getClipper();
+            clipper.toggleClipping();
+            logger.info("Cutting lines: " + (clipper.isClipping() ? "ENABLED" : "DISABLED"));
         },false);
     }
 
@@ -76,6 +78,6 @@ public class WorkspaceFeature implements FeaturePlugin {
      * @return {@code true} if cutting outstanding lines is enabled; {@code false} otherwise
      */
     public static boolean isCutOutstandingLinesEnabled() {
-        return cutOutstandingLines;
+        return workspaceManager.getClipper().isClipping();
     }
 }

@@ -14,16 +14,19 @@ import javax.swing.JTextArea;
 import edu.kis.legacy.drawer.panel.DrawPanelController;
 import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.appbase.gui.WindowComponent;
-import edu.kis.powp.jobs2d.Job2dDriver;
 import edu.kis.powp.jobs2d.command.DriverCommand;
 import edu.kis.powp.jobs2d.command.manager.DriverCommandManager;
+import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
+import edu.kis.powp.jobs2d.transformations.ScaleTransformationDecorator;
+import edu.kis.powp.jobs2d.transformations.TransformationDecorator;
 import edu.kis.powp.observer.Subscriber;
 
 public class CommandManagerWindow extends JFrame implements WindowComponent {
 
     private DriverCommandManager commandManager;
-    private Job2dDriver previewDriver;
+    private VisitableJob2dDriver previewDriver;
+    private TransformationDecorator transformationDecorator;
 
     private JTextArea currentCommandField;
 
@@ -39,7 +42,7 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
 
     public CommandManagerWindow(DriverCommandManager commandManager) {
         this.setTitle("Command Manager");
-        this.setSize(1200, 900);
+        this.setSize(600, 400);
         Container content = this.getContentPane();
         content.setLayout(new GridBagLayout());
 
@@ -103,7 +106,7 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 0;
-        c.weightx = 0.3;
+        c.weightx = 0.2;
         c.weighty = 1;
         content.add(leftPanel, c);
 
@@ -115,11 +118,12 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         drawPanelController.initialize(drawPanel);
 
         previewDriver = new LineDriverAdapter(drawPanelController, LineFactory.getBasicLine(), "preview");
+        transformationDecorator = new ScaleTransformationDecorator(previewDriver, 3., 3.);
 
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 0;
-        c.weightx = 0.7;
+        c.weightx = 0.8;
         content.add(drawPanel, c);
     }
 
