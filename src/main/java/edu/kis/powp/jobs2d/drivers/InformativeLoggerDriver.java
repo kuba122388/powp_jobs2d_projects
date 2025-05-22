@@ -2,6 +2,8 @@ package edu.kis.powp.jobs2d.drivers;
 
 import java.util.logging.Logger;
 
+import edu.kis.powp.jobs2d.drivers.visitors.DriverVisitor;
+
 public class InformativeLoggerDriver implements VisitableJob2dDriver {
 
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);

@@ -1,7 +1,7 @@
 package edu.kis.powp.jobs2d.transformations;
 
-import edu.kis.powp.jobs2d.drivers.DriverVisitor;
 import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
+import edu.kis.powp.jobs2d.drivers.visitors.DriverVisitor;
 
 public class ScaleTransformationDecorator extends TransformationDecorator {
     private final double scaleX;

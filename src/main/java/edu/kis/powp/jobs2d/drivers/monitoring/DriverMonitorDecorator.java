@@ -1,7 +1,7 @@
 package edu.kis.powp.jobs2d.drivers.monitoring;
 
-import edu.kis.powp.jobs2d.drivers.DriverVisitor;
 import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
+import edu.kis.powp.jobs2d.drivers.visitors.DriverVisitor;
 
 public class DriverMonitorDecorator implements VisitableJob2dDriver {
     private final VisitableJob2dDriver driver;

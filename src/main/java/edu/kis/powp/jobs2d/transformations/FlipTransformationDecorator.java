@@ -1,6 +1,6 @@
 package edu.kis.powp.jobs2d.transformations;
-import edu.kis.powp.jobs2d.drivers.DriverVisitor;
 import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
+import edu.kis.powp.jobs2d.drivers.visitors.DriverVisitor;
 
 public class FlipTransformationDecorator extends TransformationDecorator {
     private final boolean flipHorizontal;

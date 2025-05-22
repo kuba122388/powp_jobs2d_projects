@@ -2,8 +2,8 @@ package edu.kis.powp.jobs2d;
 
 import java.util.logging.Logger;
 
-import edu.kis.powp.jobs2d.drivers.SimpleDriverCountingVisitor;
 import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
+import edu.kis.powp.jobs2d.drivers.visitors.SimpleDriverCountingVisitor;
 import edu.kis.powp.jobs2d.features.DriverFeature;
 
 public class CountDriversTest {
