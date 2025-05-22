@@ -11,21 +11,35 @@ import edu.kis.powp.jobs2d.features.DrawerFeature;
  * This class allows setting a {@link CanvaShape} to represent the workspace area,
  * and automatically renders its border using a special {@link Job2dDriver}.
  */
-public class WorkspaceManager {
+public class WorkspaceManager implements Job2dDriver {
     private CanvaShape currentCanvaShape;
     private final Job2dDriver borderDriver;
+    private boolean orClipeLine;
+    private static Job2dDriver innerDriver;
+
+    private int currentX,  currentY;
 
     /**
      * Constructs a new {@code WorkspaceManager} with a preconfigured border drawing driver.
      * <p>
      * The border driver uses a dotted line and is labeled "border".
      */
-    public WorkspaceManager() {
+    public WorkspaceManager(Job2dDriver innerDriver) {
         borderDriver = new LineDriverAdapter(
                 DrawerFeature.getDrawerController(),
                 LineFactory.getDottedLine(),
                 "border"
         );
+
+        WorkspaceManager.innerDriver = innerDriver;
+    }
+
+    public static void updateDriver(Job2dDriver newDriver) {
+        innerDriver = newDriver;
+    }
+
+    public void changeLineClipeed() {
+        this.orClipeLine = !this.orClipeLine;
     }
 
     /**
@@ -47,5 +61,41 @@ public class WorkspaceManager {
      */
     public CanvaShape getCurrentCanvaShape() {
         return currentCanvaShape;
+    }
+
+    @Override
+    public void setPosition(int x, int y) {
+        if ( innerDriver == null )
+            return;
+
+        int[] clipped = clipPointToBounds(x, y);
+        currentX = clipped[0];
+        currentY = clipped[1];
+        innerDriver.setPosition(currentX,  currentY);
+    }
+
+    @Override
+    public void operateTo(int x, int y) {
+        if ( innerDriver == null )
+            return;
+        int[] clipped;
+        if( orClipeLine ) {
+            clipped = clipPointToBounds(x, y);
+        }
+        else {
+            clipped = new int[] {x, y};
+        }
+
+        currentX = clipped[0];
+        currentY = clipped[1];
+        innerDriver.operateTo(currentX,  currentY);
+    }
+
+    private int[] clipPointToBounds(int x, int y) {
+        if (currentCanvaShape.contains(x, y)) {
+            return new int[]{x, y};
+        } else {
+            return currentCanvaShape.clipLine(currentX,  currentY, x, y);
+        }
     }
 }

@@ -2,6 +2,7 @@ package edu.kis.powp.jobs2d.drivers;
 
 import edu.kis.powp.jobs2d.Job2dDriver;
 import edu.kis.powp.jobs2d.LoggerDriver;
+import edu.kis.powp.jobs2d.features.WorkspaceFeature;
 import edu.kis.powp.observer.Publisher;
 
 /**
@@ -17,7 +18,9 @@ public class DriverManager {
      * @param driver Set the driver as current.
      */
     public synchronized void setCurrentDriver(Job2dDriver driver) {
-        currentDriver = driver;
+        WorkspaceFeature.updateDriver(driver);
+
+        currentDriver = WorkspaceFeature.getWorkspaceManager();
         changePublisher.notifyObservers();
     }
 
