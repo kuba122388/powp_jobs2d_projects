@@ -6,6 +6,7 @@ import edu.kis.powp.jobs2d.Job2dDriver;
 import edu.kis.powp.jobs2d.drivers.SelectWorkspaceMenuOptionListener;
 import edu.kis.powp.jobs2d.drivers.WorkspaceManager;
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
+import edu.kis.powp.jobs2d.plugin.FeaturePlugin;
 
 import java.util.logging.Logger;
 
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
  * predefined {@link CanvaShape} instances through menu options. It holds a shared {@link WorkspaceManager}
  * instance to manage the currently active workspace shape.
  */
-public class WorkspaceFeature {
+public class WorkspaceFeature implements FeaturePlugin {
     private static Application app;
     private static WorkspaceManager workspaceManager = new WorkspaceManager(DriverFeature.getDriverManager().getCurrentDriver());
     private static boolean cutOutstandingLines = false;
@@ -40,6 +41,11 @@ public class WorkspaceFeature {
             cutOutstandingLines = !cutOutstandingLines;
             logger.info("Cutting lines: " + (cutOutstandingLines ? "ENABLED" : "DISABLED"));
         },false);
+    }
+
+    @Override
+    public void setup(Application application) {
+        setupWorkspacePlugin(application);
     }
 
     /**
