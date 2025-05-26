@@ -1,5 +1,6 @@
 package edu.kis.powp.jobs2d.command.manager;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,6 +18,8 @@ public class DriverCommandManager {
 
     private Publisher changePublisher = new Publisher();
 
+    private final List<DriverCommand> commandHistory = new ArrayList<>();
+
     /**
      * Set current command.
      * 
@@ -24,6 +27,7 @@ public class DriverCommandManager {
      */
     public synchronized void setCurrentCommand(DriverCommand commandList) {
         this.currentCommand = commandList;
+        storeInHistory(commandList);
         changePublisher.notifyObservers();
     }
 
@@ -79,7 +83,15 @@ public class DriverCommandManager {
             return getCurrentCommand().toString();
     }
 
+    private void storeInHistory(DriverCommand command) {
+        commandHistory.add(command);
+    }
+
     public Publisher getChangePublisher() {
         return changePublisher;
+    }
+
+    public synchronized List<DriverCommand> getCommandHistory() {
+        return new ArrayList<>(commandHistory);
     }
 }

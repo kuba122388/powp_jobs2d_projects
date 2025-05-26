@@ -1,15 +1,10 @@
 package edu.kis.powp.jobs2d.command.gui;
 
-import java.awt.Container;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 import edu.kis.legacy.drawer.panel.DrawPanelController;
 import edu.kis.legacy.drawer.shape.LineFactory;
@@ -34,6 +29,8 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
     private JTextArea observerListField;
 
     private DrawPanelController drawPanelController;
+
+    private JTextArea commandHistoryField;
 
     /**
      * 
@@ -70,6 +67,22 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         leftPanel.add(currentCommandField, leftConstraints);
         updateCurrentCommandField();
 
+        JLabel historyLabel = new JLabel("Commands History:");
+        leftConstraints.gridy = 2;
+        leftConstraints.weighty = 0;
+        leftPanel.add(historyLabel, leftConstraints);
+
+        commandHistoryField = new JTextArea("");
+        commandHistoryField.setEditable(false);
+
+        JScrollPane scrollPane = new JScrollPane(commandHistoryField);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension(200, 300));
+
+        leftConstraints.gridy = 3;
+        leftConstraints.weighty = 0.3;
+        leftPanel.add(scrollPane, leftConstraints);
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridBagLayout());
 
@@ -98,7 +111,12 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         buttonConstraints.gridy = 3;
         buttonPanel.add(btnPreviewCommand, buttonConstraints);
 
-        leftConstraints.gridy = 2;
+        JButton btnRefreshHistory = new JButton("Refresh Commands History");
+        btnRefreshHistory.addActionListener((ActionEvent e) -> this.updateCommandHistoryField());
+        buttonConstraints.gridy = 4;
+        buttonPanel.add(btnRefreshHistory, buttonConstraints);
+
+        leftConstraints.gridy = 4;
         leftConstraints.weighty = 0.4;
         leftPanel.add(buttonPanel, leftConstraints);
 
@@ -167,6 +185,17 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
             observerListString = "No observers loaded";
 
         observerListField.setText(observerListString);
+    }
+
+    public void updateCommandHistoryField() {
+        List<DriverCommand> history = commandManager.getCommandHistory();
+        StringBuilder historyText = new StringBuilder();
+
+        for (DriverCommand command : history) {
+            historyText.append(command.toString()).append("\n");
+        }
+
+        commandHistoryField.setText(historyText.toString());
     }
 
     @Override
