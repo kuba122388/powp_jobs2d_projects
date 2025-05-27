@@ -23,10 +23,6 @@ public class WorkspaceFeature implements FeaturePlugin {
     private static WorkspaceManager workspaceManager;
 
 
-    public static void updateDriver(Job2dDriver driver) {
-        workspaceManager.getClipper().setInnerDriver(driver);
-    }
-
     /**
      * Initializes the workspace plugin by adding a "Workspaces" component menu to the application.
      *

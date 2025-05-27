@@ -1,18 +1,19 @@
 package edu.kis.powp.jobs2d.canva;
 
-import edu.kis.powp.jobs2d.Job2dDriver;
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
+import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
+import edu.kis.powp.jobs2d.drivers.visitors.DriverVisitor;
 
 /**
- * A {@link Job2dDriver} decorator that adds optional clipping behavior to constrain
+ * A {@link VisitableJob2dDriver} decorator that adds optional clipping behavior to constrain
  * drawing operations within a defined {@link CanvaShape} workspace.
  * <p>
  * This decorator intercepts all drawing commands (setPosition, operateTo) and, depending on
  * the clipping mode, restricts them to stay within the provided canvas shape bounds.
  * It is designed to be dynamically enabled or disabled via {@link #toggleClipping()} or {@link #setClipping(boolean)}.
  */
-public class ClippingJobs2dDriverDecorator implements Job2dDriver {
-    private Job2dDriver innerDriver;
+public class ClippingJobs2dDriverDecorator implements VisitableJob2dDriver {
+    private VisitableJob2dDriver innerDriver;
     private CanvaShape canvaShape;
     private boolean clipping = false;
 
@@ -23,15 +24,15 @@ public class ClippingJobs2dDriverDecorator implements Job2dDriver {
      *
      * @param innerDriver the driver to be wrapped and enhanced with clipping logic
      */
-    public ClippingJobs2dDriverDecorator(Job2dDriver innerDriver) {
+    public ClippingJobs2dDriverDecorator(VisitableJob2dDriver innerDriver) {
         this.innerDriver = innerDriver;
     }
 
     public CanvaShape getCanvasShape() { return canvaShape; }
     public void setCanvaShape(CanvaShape canvaShape) { this.canvaShape = canvaShape; }
 
-    public Job2dDriver getInnerDriver() { return innerDriver; }
-    public void setInnerDriver(Job2dDriver innerDriver) { this.innerDriver = innerDriver; }
+    public VisitableJob2dDriver getInnerDriver() { return innerDriver; }
+    public void setInnerDriver(VisitableJob2dDriver innerDriver) { this.innerDriver = innerDriver; }
 
     public boolean isClipping() { return clipping; }
 
@@ -89,5 +90,10 @@ public class ClippingJobs2dDriverDecorator implements Job2dDriver {
         } else {
             return canvaShape.clipLine(currentX,  currentY, x, y);
         }
+    }
+
+    @Override
+    public void accept(DriverVisitor visitor) {
+        visitor.visit(this);
     }
 }

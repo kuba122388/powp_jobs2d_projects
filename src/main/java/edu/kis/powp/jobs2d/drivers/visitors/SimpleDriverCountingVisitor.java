@@ -1,5 +1,6 @@
 package edu.kis.powp.jobs2d.drivers.visitors;
 
+import edu.kis.powp.jobs2d.canva.ClippingJobs2dDriverDecorator;
 import edu.kis.powp.jobs2d.drivers.ComplexDriver;
 import edu.kis.powp.jobs2d.drivers.InformativeLoggerDriver;
 import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
@@ -45,6 +46,12 @@ public class SimpleDriverCountingVisitor implements DriverVisitor {
     @Override
     public void visit(FlipTransformationDecorator decorator){
         decorator.getDriver().accept(this);
+        total++;
+    }
+
+    @Override
+    public void visit(ClippingJobs2dDriverDecorator decorator) {
+        decorator.getInnerDriver().accept(this);
         total++;
     }
 

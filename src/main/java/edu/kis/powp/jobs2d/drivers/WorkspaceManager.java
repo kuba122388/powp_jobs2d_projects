@@ -5,6 +5,7 @@ import edu.kis.powp.jobs2d.Job2dDriver;
 import edu.kis.powp.jobs2d.canva.ClippingJobs2dDriverDecorator;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
+import edu.kis.powp.jobs2d.drivers.observers.WorkspaceDriverChangeObserver;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 import edu.kis.powp.jobs2d.features.DriverFeature;
 
@@ -42,16 +43,17 @@ public class WorkspaceManager {
     public synchronized void setWorkspaceCanvaShape(CanvaShape canvaShape) {
         clipper.setCanvaShape(canvaShape);
         canvaShape.draw(borderDriver);
+        WorkspaceDriverChangeObserver observer = new WorkspaceDriverChangeObserver();
+        DriverFeature.getDriverManager().getChangePublisher().addSubscriber(observer);
     }
 
     /**
-     * Returns the current canvas shape set for the workspace.
+     * Returns the clipping decorator used to enforce drawing within the canvas shape.
+     * <p>
+     * This driver can be registered as the main driver to ensure clipping is respected
+     * during user or programmatic drawing operations.
      *
-     * @return the currently active {@link CanvaShape}, or {@code null} if none is set
+     * @return the {@link ClippingJobs2dDriverDecorator} used for clipping logic
      */
-    public CanvaShape getCurrentCanvaShape() {
-        return clipper.getCanvasShape();
-    }
-
     public ClippingJobs2dDriverDecorator getClipper() { return clipper; }
 }
