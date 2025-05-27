@@ -27,7 +27,6 @@ public class DriverCommandManager {
      */
     public synchronized void setCurrentCommand(DriverCommand commandList) {
         this.currentCommand = commandList;
-        storeInHistory(commandList);
         changePublisher.notifyObservers();
     }
 
@@ -83,15 +82,8 @@ public class DriverCommandManager {
             return getCurrentCommand().toString();
     }
 
-    private void storeInHistory(DriverCommand command) {
-        commandHistory.add(command);
-    }
-
     public Publisher getChangePublisher() {
         return changePublisher;
     }
 
-    public synchronized List<DriverCommand> getCommandHistory() {
-        return new ArrayList<>(commandHistory);
-    }
 }

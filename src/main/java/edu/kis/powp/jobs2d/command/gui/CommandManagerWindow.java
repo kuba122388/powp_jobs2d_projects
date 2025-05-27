@@ -10,6 +10,7 @@ import edu.kis.legacy.drawer.panel.DrawPanelController;
 import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.appbase.gui.WindowComponent;
 import edu.kis.powp.jobs2d.command.DriverCommand;
+import edu.kis.powp.jobs2d.command.manager.CommandHistoryManager;
 import edu.kis.powp.jobs2d.command.manager.DriverCommandManager;
 import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
@@ -30,20 +31,26 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
 
     private DrawPanelController drawPanelController;
 
-    private JTextArea commandHistoryField;
+    private CommandHistoryManager commandHistoryManager;
+    private JList<CommandHistoryManager.HistoryEntry> commandHistoryList;
+    private DefaultListModel<CommandHistoryManager.HistoryEntry> historyListModel;
+
+
 
     /**
      * 
      */
     private static final long serialVersionUID = 9204679248304669948L;
 
-    public CommandManagerWindow(DriverCommandManager commandManager) {
+    public CommandManagerWindow(DriverCommandManager commandManager, CommandHistoryManager commandHistoryManager)
+    {
         this.setTitle("Command Manager");
         this.setSize(600, 400);
         Container content = this.getContentPane();
         content.setLayout(new GridBagLayout());
 
         this.commandManager = commandManager;
+        this.commandHistoryManager = commandHistoryManager;
 
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new GridBagLayout());
@@ -72,10 +79,12 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         leftConstraints.weighty = 0;
         leftPanel.add(historyLabel, leftConstraints);
 
-        commandHistoryField = new JTextArea("");
-        commandHistoryField.setEditable(false);
+        historyListModel = new DefaultListModel<>();
+        commandHistoryList = new JList<>(historyListModel);
+        commandHistoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        commandHistoryList.setVisibleRowCount(10);
 
-        JScrollPane scrollPane = new JScrollPane(commandHistoryField);
+        JScrollPane scrollPane = new JScrollPane(commandHistoryList);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setPreferredSize(new Dimension(200, 300));
 
@@ -115,6 +124,11 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         btnRefreshHistory.addActionListener((ActionEvent e) -> this.updateCommandHistoryField());
         buttonConstraints.gridy = 4;
         buttonPanel.add(btnRefreshHistory, buttonConstraints);
+
+        JButton btnRestoreCommand = new JButton("Restore Selected Command");
+        btnRestoreCommand.addActionListener((ActionEvent e) -> this.restoreSelectedCommand());
+        buttonConstraints.gridy = 5;
+        buttonPanel.add(btnRestoreCommand, buttonConstraints);
 
         leftConstraints.gridy = 4;
         leftConstraints.weighty = 0.4;
@@ -188,14 +202,19 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
     }
 
     public void updateCommandHistoryField() {
-        List<DriverCommand> history = commandManager.getCommandHistory();
-        StringBuilder historyText = new StringBuilder();
-
-        for (DriverCommand command : history) {
-            historyText.append(command.toString()).append("\n");
+        List<CommandHistoryManager.HistoryEntry> history = commandHistoryManager.getHistory();
+        historyListModel.clear();
+        for (CommandHistoryManager.HistoryEntry entry : history) {
+            historyListModel.addElement(entry);
         }
+    }
 
-        commandHistoryField.setText(historyText.toString());
+    private void restoreSelectedCommand() {
+        CommandHistoryManager.HistoryEntry selectedEntry = commandHistoryList.getSelectedValue();
+        if (selectedEntry != null) {
+            commandManager.setCurrentCommand(selectedEntry.getCommand());
+            updateCurrentCommandField();
+        }
     }
 
     @Override
