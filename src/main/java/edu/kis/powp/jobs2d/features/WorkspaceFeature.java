@@ -4,8 +4,10 @@ import edu.kis.powp.appbase.Application;
 
 import edu.kis.powp.jobs2d.canva.ClippingJobs2dDriverDecorator;
 import edu.kis.powp.jobs2d.drivers.SelectWorkspaceMenuOptionListener;
+import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
 import edu.kis.powp.jobs2d.drivers.WorkspaceManager;
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
+import edu.kis.powp.jobs2d.drivers.observers.WorkspaceDriverChangeObserver;
 import edu.kis.powp.jobs2d.plugin.FeaturePlugin;
 
 import java.util.logging.Logger;
@@ -32,6 +34,9 @@ public class WorkspaceFeature implements FeaturePlugin {
         app = application;
         app.addComponentMenu(WorkspaceFeature.class, "Workspaces");
 
+        WorkspaceDriverChangeObserver observer = new WorkspaceDriverChangeObserver(workspaceManager.getClipper());
+        DriverFeature.getDriverManager().getChangePublisher().addSubscriber(observer);
+
         Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
         app.addComponentMenuElementWithCheckBox(WorkspaceFeature.class, "Toggle cutting lines", e -> {
             ClippingJobs2dDriverDecorator clipper = workspaceManager.getClipper();
@@ -43,15 +48,6 @@ public class WorkspaceFeature implements FeaturePlugin {
     @Override
     public void setup(Application application) {
         setupWorkspacePlugin(application);
-    }
-
-    /**
-     * Returns the shared {@link WorkspaceManager} instance used by the workspace feature.
-     *
-     * @return the {@code WorkspaceManager} managing the current canvas shape
-     */
-    public static WorkspaceManager getWorkspaceManager() {
-        return workspaceManager;
     }
 
     /**
@@ -75,4 +71,18 @@ public class WorkspaceFeature implements FeaturePlugin {
     public static boolean isCutOutstandingLinesEnabled() {
         return workspaceManager.getClipper().isClipping();
     }
+
+    /**
+     * Returns the current canvas shape set for the workspace.
+     *
+     * @return the currently active {@link CanvaShape}, or {@code null} if none is set
+     */
+    public CanvaShape getCurrentCanvaShape() { return workspaceManager.getClipper().getCanvasShape(); }
+
+    /**
+     * Returns the current inner driver for the workspace.
+     *
+     * @return the currently used {@link edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver}
+     */
+    public VisitableJob2dDriver getInnerDriver() { return workspaceManager.getClipper().getDriver(); }
 }
