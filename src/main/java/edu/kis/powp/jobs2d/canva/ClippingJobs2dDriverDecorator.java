@@ -1,8 +1,8 @@
 package edu.kis.powp.jobs2d.canva;
 
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
+import edu.kis.powp.jobs2d.drivers.AbstractDecorator;
 import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
-import edu.kis.powp.jobs2d.drivers.visitors.DriverVisitor;
 
 /**
  * A {@link VisitableJob2dDriver} decorator that adds optional clipping behavior to constrain
@@ -12,27 +12,20 @@ import edu.kis.powp.jobs2d.drivers.visitors.DriverVisitor;
  * the clipping mode, restricts them to stay within the provided canvas shape bounds.
  * It is designed to be dynamically enabled or disabled via {@link #toggleClipping()} or {@link #setClipping(boolean)}.
  */
-public class ClippingJobs2dDriverDecorator implements VisitableJob2dDriver {
-    private VisitableJob2dDriver innerDriver;
+public class ClippingJobs2dDriverDecorator extends AbstractDecorator {
     private CanvaShape canvaShape;
     private boolean clipping = false;
 
     private int currentX, currentY;
 
-    /**
-     * Constructs a decorator for the given {@code innerDriver}.
-     *
-     * @param innerDriver the driver to be wrapped and enhanced with clipping logic
-     */
-    public ClippingJobs2dDriverDecorator(VisitableJob2dDriver innerDriver) {
-        this.innerDriver = innerDriver;
+    public ClippingJobs2dDriverDecorator(VisitableJob2dDriver driver) {
+        super(driver);
     }
 
     public CanvaShape getCanvasShape() { return canvaShape; }
     public void setCanvaShape(CanvaShape canvaShape) { this.canvaShape = canvaShape; }
 
-    public VisitableJob2dDriver getInnerDriver() { return innerDriver; }
-    public void setInnerDriver(VisitableJob2dDriver innerDriver) { this.innerDriver = innerDriver; }
+    public void setDriver(VisitableJob2dDriver driver) { super.driver = driver; }
 
     public boolean isClipping() { return clipping; }
 
@@ -54,13 +47,13 @@ public class ClippingJobs2dDriverDecorator implements VisitableJob2dDriver {
      */
     @Override
     public void setPosition(int x, int y) {
-        if ( innerDriver == null )
+        if ( super.driver == null )
             return;
 
         int[] clipped = clipPointToBounds(x, y);
         currentX = clipped[0];
         currentY = clipped[1];
-        innerDriver.setPosition(currentX,  currentY);
+        super.driver.setPosition(currentX,  currentY);
     }
 
     /**
@@ -69,7 +62,7 @@ public class ClippingJobs2dDriverDecorator implements VisitableJob2dDriver {
      */
     @Override
     public void operateTo(int x, int y) {
-        if ( innerDriver == null )
+        if ( super.driver == null )
             return;
         int[] clipped;
         if( clipping ) {
@@ -81,7 +74,7 @@ public class ClippingJobs2dDriverDecorator implements VisitableJob2dDriver {
 
         currentX = clipped[0];
         currentY = clipped[1];
-        innerDriver.operateTo(currentX,  currentY);
+        super.driver.operateTo(currentX,  currentY);
     }
 
     private int[] clipPointToBounds(int x, int y) {
@@ -90,10 +83,5 @@ public class ClippingJobs2dDriverDecorator implements VisitableJob2dDriver {
         } else {
             return canvaShape.clipLine(currentX,  currentY, x, y);
         }
-    }
-
-    @Override
-    public void accept(DriverVisitor visitor) {
-        visitor.visit(this);
     }
 }

@@ -43,8 +43,6 @@ public class WorkspaceManager {
     public synchronized void setWorkspaceCanvaShape(CanvaShape canvaShape) {
         clipper.setCanvaShape(canvaShape);
         canvaShape.draw(borderDriver);
-        WorkspaceDriverChangeObserver observer = new WorkspaceDriverChangeObserver();
-        DriverFeature.getDriverManager().getChangePublisher().addSubscriber(observer);
     }
 
     /**
