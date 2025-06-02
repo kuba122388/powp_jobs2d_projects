@@ -61,7 +61,6 @@ public class TestJobs2dApp {
     private static void setupCommandTests(Application application) {
         application.addTest("Load secret command", new SelectLoadSecretCommandOptionListener());
         application.addTest("Load notSecret command", new SelectLoadNotSoSecretCommandOptionListener());
-        application.addTest("Load edited secret command", new SelectLoadEditedCommandOptionListener());
 
 
         application.addTest("Run command", new SelectRunCurrentCommandOptionListener(DriverFeature.getDriverManager()));

@@ -25,16 +25,6 @@ public class ComplexCommandEditor {
     }
 
 
-    public void insertCommand(int index, DriverCommand command) {
-        commands.add(index, command.copy());
-    }
-
-
-    public void updateCommand(int index, DriverCommand newCommand) {
-        validateIndex(index);
-        commands.set(index, newCommand.copy());
-    }
-
     public void removeCommand(int index) {
         validateIndex(index);
         commands.remove(index);
@@ -50,17 +40,9 @@ public class ComplexCommandEditor {
         commands.add(toIndex, command);
     }
 
+
     public List<DriverCommand> getCommands() {
         return Collections.unmodifiableList(commands);
-    }
-
-
-    public ComplexCommand toComplexCommand() {
-        ComplexCommand complex = new ComplexCommand();
-        for (DriverCommand cmd : commands) {
-            complex.addCommand(cmd.copy());
-        }
-        return complex;
     }
 
 
