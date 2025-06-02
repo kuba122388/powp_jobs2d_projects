@@ -1,20 +1,16 @@
 package edu.kis.powp.jobs2d.command.gui;
 
-import java.awt.Container;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 import edu.kis.legacy.drawer.panel.DrawPanelController;
 import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.appbase.gui.WindowComponent;
 import edu.kis.powp.jobs2d.command.DriverCommand;
+import edu.kis.powp.jobs2d.command.manager.CommandHistoryManager;
 import edu.kis.powp.jobs2d.command.manager.DriverCommandManager;
 import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
@@ -35,18 +31,26 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
 
     private DrawPanelController drawPanelController;
 
+    private CommandHistoryManager commandHistoryManager;
+    private JList<CommandHistoryManager.HistoryEntry> commandHistoryList;
+    private DefaultListModel<CommandHistoryManager.HistoryEntry> historyListModel;
+
+
+
     /**
      * 
      */
     private static final long serialVersionUID = 9204679248304669948L;
 
-    public CommandManagerWindow(DriverCommandManager commandManager) {
+    public CommandManagerWindow(DriverCommandManager commandManager, CommandHistoryManager commandHistoryManager)
+    {
         this.setTitle("Command Manager");
         this.setSize(600, 400);
         Container content = this.getContentPane();
         content.setLayout(new GridBagLayout());
 
         this.commandManager = commandManager;
+        this.commandHistoryManager = commandHistoryManager;
 
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new GridBagLayout());
@@ -69,6 +73,24 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         leftConstraints.weighty = 0.3;
         leftPanel.add(currentCommandField, leftConstraints);
         updateCurrentCommandField();
+
+        JLabel historyLabel = new JLabel("Commands History:");
+        leftConstraints.gridy = 2;
+        leftConstraints.weighty = 0;
+        leftPanel.add(historyLabel, leftConstraints);
+
+        historyListModel = new DefaultListModel<>();
+        commandHistoryList = new JList<>(historyListModel);
+        commandHistoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        commandHistoryList.setVisibleRowCount(10);
+
+        JScrollPane scrollPane = new JScrollPane(commandHistoryList);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension(200, 300));
+
+        leftConstraints.gridy = 3;
+        leftConstraints.weighty = 0.3;
+        leftPanel.add(scrollPane, leftConstraints);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridBagLayout());
@@ -98,7 +120,17 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         buttonConstraints.gridy = 3;
         buttonPanel.add(btnPreviewCommand, buttonConstraints);
 
-        leftConstraints.gridy = 2;
+        JButton btnRefreshHistory = new JButton("Refresh Commands History");
+        btnRefreshHistory.addActionListener((ActionEvent e) -> this.updateCommandHistoryField());
+        buttonConstraints.gridy = 4;
+        buttonPanel.add(btnRefreshHistory, buttonConstraints);
+
+        JButton btnRestoreCommand = new JButton("Restore Selected Command");
+        btnRestoreCommand.addActionListener((ActionEvent e) -> this.restoreSelectedCommand());
+        buttonConstraints.gridy = 5;
+        buttonPanel.add(btnRestoreCommand, buttonConstraints);
+
+        leftConstraints.gridy = 4;
         leftConstraints.weighty = 0.4;
         leftPanel.add(buttonPanel, leftConstraints);
 
@@ -167,6 +199,22 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
             observerListString = "No observers loaded";
 
         observerListField.setText(observerListString);
+    }
+
+    public void updateCommandHistoryField() {
+        List<CommandHistoryManager.HistoryEntry> history = commandHistoryManager.getHistory();
+        historyListModel.clear();
+        for (CommandHistoryManager.HistoryEntry entry : history) {
+            historyListModel.addElement(entry);
+        }
+    }
+
+    private void restoreSelectedCommand() {
+        CommandHistoryManager.HistoryEntry selectedEntry = commandHistoryList.getSelectedValue();
+        if (selectedEntry != null) {
+            commandManager.setCurrentCommand(selectedEntry.getCommand());
+            updateCurrentCommandField();
+        }
     }
 
     @Override
