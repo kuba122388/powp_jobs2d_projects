@@ -9,20 +9,20 @@ import javax.swing.*;
 import edu.kis.legacy.drawer.panel.DrawPanelController;
 import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.appbase.gui.WindowComponent;
+import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
 import edu.kis.powp.jobs2d.command.DriverCommand;
 import edu.kis.powp.jobs2d.command.manager.CommandHistoryManager;
 import edu.kis.powp.jobs2d.command.manager.DriverCommandManager;
 import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
-import edu.kis.powp.jobs2d.transformations.ScaleTransformationDecorator;
-import edu.kis.powp.jobs2d.transformations.TransformationDecorator;
+import edu.kis.powp.jobs2d.features.WorkspaceFeature;
 import edu.kis.powp.observer.Subscriber;
 
 public class CommandManagerWindow extends JFrame implements WindowComponent {
 
     private DriverCommandManager commandManager;
     private VisitableJob2dDriver previewDriver;
-    private TransformationDecorator transformationDecorator;
+    private VisitableJob2dDriver workspaceDriver;
 
     private JTextArea currentCommandField;
 
@@ -130,6 +130,11 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         buttonConstraints.gridy = 5;
         buttonPanel.add(btnRestoreCommand, buttonConstraints);
 
+        JButton btnDisplayWorkspaceWindow = new JButton("Display Workspace Window");
+        btnDisplayWorkspaceWindow.addActionListener((ActionEvent e) -> this.displayWorkspace());
+        buttonConstraints.gridy = 6;
+        buttonPanel.add(btnDisplayWorkspaceWindow, buttonConstraints);
+
         leftConstraints.gridy = 4;
         leftConstraints.weighty = 0.4;
         leftPanel.add(buttonPanel, leftConstraints);
@@ -150,13 +155,19 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         drawPanelController.initialize(drawPanel);
 
         previewDriver = new LineDriverAdapter(drawPanelController, LineFactory.getBasicLine(), "preview");
-        transformationDecorator = new ScaleTransformationDecorator(previewDriver, 3., 3.);
+        workspaceDriver = new LineDriverAdapter(drawPanelController, LineFactory.getDottedLine(), "workspacePreview");
 
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 0;
         c.weightx = 0.8;
         content.add(drawPanel, c);
+    }
+
+    private void displayWorkspace(){
+        CanvaShape currentCanvaShape = WorkspaceFeature.getWorkspaceManager().getCurrentCanvaShape();
+        if(currentCanvaShape == null) return;
+        currentCanvaShape.draw(workspaceDriver);
     }
 
     private void clearCommand() {
@@ -183,8 +194,7 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         DriverCommand currentCommand = commandManager.getCurrentCommand();
 
         if (currentCommand != null) {
-            clearPanel();
-
+//            clearPanel();
             currentCommand.execute(previewDriver);
         }
     }
