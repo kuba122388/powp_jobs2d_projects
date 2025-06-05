@@ -19,6 +19,7 @@ import edu.kis.powp.jobs2d.drivers.ComplexDriver;
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
 import edu.kis.powp.jobs2d.canva.shapes.CircularCanva;
 import edu.kis.powp.jobs2d.canva.shapes.RectangleCanva;
+import edu.kis.powp.jobs2d.drivers.RealTimeDecoratorDriver;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverLoggingMonitor;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverMonitorDecorator;
 import edu.kis.powp.jobs2d.drivers.monitoring.DriverUsageMonitor;
@@ -122,6 +123,11 @@ public class TestJobs2dApp {
         driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
         driver = new DriverMonitorDecorator(driver, usageMonitor, loggingMonitor);
         DriverFeature.addDriver("Monitored Driver",driver);
+
+        driver = new RealTimeDecoratorDriver(new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic"), application.getFreePanel(), 30, 10);
+        DriverFeature.addDriver("Basic line Simulator with real time drawing", driver);
+        driver = new RealTimeDecoratorDriver(new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special"), application.getFreePanel(), 30, 10);
+        DriverFeature.addDriver("Special line Simulator with real time drawing", driver);
     }
 
     private static void setupWorkspaces() {
