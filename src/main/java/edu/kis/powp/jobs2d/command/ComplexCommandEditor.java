@@ -51,5 +51,10 @@ public class ComplexCommandEditor {
             throw new IndexOutOfBoundsException("Invalid command index: " + index);
         }
     }
+
+    public void replaceCommand(int index, DriverCommand newCommand) {
+        commands.set(index, newCommand);
+    }
+
 }
 

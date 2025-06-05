@@ -15,12 +15,9 @@ public class ComplexCommandEditorUI extends JFrame {
 
     public ComplexCommandEditorUI(DriverCommandManager manager) {
         this.manager = manager;
-
-        if (manager.getCurrentCommand() instanceof ICompoundCommand) {
-            this.editor = new ComplexCommandEditor((ICompoundCommand) manager.getCurrentCommand());
-        } else {
-            this.editor = new ComplexCommandEditor();
-        }
+        this.editor = (manager.getCurrentCommand() instanceof ICompoundCommand)
+                ? new ComplexCommandEditor((ICompoundCommand) manager.getCurrentCommand())
+                : new ComplexCommandEditor();
 
         setupUI();
     }
@@ -33,18 +30,29 @@ public class ComplexCommandEditorUI extends JFrame {
 
         listModel = new DefaultListModel<>();
         updateListModel();
+
         commandList = new JList<>(listModel);
         add(new JScrollPane(commandList), BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 5));
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 6));
+        buttonPanel.add(createAddButton());
+        buttonPanel.add(createEditButton());
+        buttonPanel.add(createRemoveButton());
+        buttonPanel.add(createMoveUpButton());
+        buttonPanel.add(createMoveDownButton());
+        buttonPanel.add(createApplyButton());
 
-        buttonPanel.add(new JButton(new AbstractAction("Add Command") {
+
+        add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private JButton createAddButton() {
+        return new JButton(new AbstractAction("Add Command") {
             public void actionPerformed(ActionEvent e) {
                 JPanel panel = new JPanel();
                 panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-                String[] commandOptions = {"SetPosition", "OperateTo"};
-                JComboBox<String> commandType = new JComboBox<>(commandOptions);
+                JComboBox<String> commandType = new JComboBox<>(new String[]{"SetPosition", "OperateTo"});
                 JTextField inputX = new JTextField(5);
                 JTextField inputY = new JTextField(5);
 
@@ -62,13 +70,9 @@ public class ComplexCommandEditorUI extends JFrame {
                     try {
                         int x = Integer.parseInt(inputX.getText());
                         int y = Integer.parseInt(inputY.getText());
-
-                        DriverCommand command;
-                        if ("SetPosition".equals(commandType.getSelectedItem())) {
-                            command = new SetPositionCommand(x, y);
-                        } else {
-                            command = new OperateToCommand(x, y);
-                        }
+                        DriverCommand command = "SetPosition".equals(commandType.getSelectedItem())
+                                ? new SetPositionCommand(x, y)
+                                : new OperateToCommand(x, y);
 
                         editor.addCommand(command);
                         updateListModel();
@@ -77,9 +81,65 @@ public class ComplexCommandEditorUI extends JFrame {
                     }
                 }
             }
-        }));
+        });
+    }
+    private JButton createEditButton() {
+        return new JButton(new AbstractAction("Edit") {
+            public void actionPerformed(ActionEvent e) {
+                int index = commandList.getSelectedIndex();
+                if (index == -1) return;
 
-        buttonPanel.add(new JButton(new AbstractAction("Remove") {
+                DriverCommand selected = listModel.get(index);
+                if (!(selected instanceof SetPositionCommand || selected instanceof OperateToCommand)) {
+                    JOptionPane.showMessageDialog(null, "Only SetPosition and OperateTo commands can be edited.");
+                    return;
+                }
+
+                int currentX = 0, currentY = 0;
+                if (selected instanceof SetPositionCommand) {
+                    SetPositionCommand spc = (SetPositionCommand) selected;
+                    currentX = spc.getX();
+                    currentY = spc.getY();
+                } else if (selected instanceof OperateToCommand) {
+                    OperateToCommand otc = (OperateToCommand) selected;
+                    currentX = otc.getX();
+                    currentY = otc.getY();
+                }
+
+
+                JTextField inputX = new JTextField(String.valueOf(currentX));
+                JTextField inputY = new JTextField(String.valueOf(currentY));
+                JPanel panel = new JPanel();
+                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+                panel.add(new JLabel("X:"));
+                panel.add(inputX);
+                panel.add(new JLabel("Y:"));
+                panel.add(inputY);
+
+                int result = JOptionPane.showConfirmDialog(null, panel, "Edit Command",
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+                if (result == JOptionPane.OK_OPTION) {
+                    try {
+                        int newX = Integer.parseInt(inputX.getText());
+                        int newY = Integer.parseInt(inputY.getText());
+
+                        DriverCommand newCommand = (selected instanceof SetPositionCommand)
+                                ? new SetPositionCommand(newX, newY)
+                                : new OperateToCommand(newX, newY);
+
+                        editor.replaceCommand(index, newCommand);
+                        updateListModel();
+                        commandList.setSelectedIndex(index);
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Invalid input: X and Y must be integers.");
+                    }
+                }
+            }
+        });
+    }
+    private JButton createRemoveButton() {
+        return new JButton(new AbstractAction("Remove") {
             public void actionPerformed(ActionEvent e) {
                 int index = commandList.getSelectedIndex();
                 if (index != -1) {
@@ -87,9 +147,11 @@ public class ComplexCommandEditorUI extends JFrame {
                     updateListModel();
                 }
             }
-        }));
+        });
+    }
 
-        buttonPanel.add(new JButton(new AbstractAction("Up") {
+    private JButton createMoveUpButton() {
+        return new JButton(new AbstractAction("Up") {
             public void actionPerformed(ActionEvent e) {
                 int index = commandList.getSelectedIndex();
                 if (index > 0) {
@@ -98,9 +160,11 @@ public class ComplexCommandEditorUI extends JFrame {
                     commandList.setSelectedIndex(index - 1);
                 }
             }
-        }));
+        });
+    }
 
-        buttonPanel.add(new JButton(new AbstractAction("Down") {
+    private JButton createMoveDownButton() {
+        return new JButton(new AbstractAction("Down") {
             public void actionPerformed(ActionEvent e) {
                 int index = commandList.getSelectedIndex();
                 if (index < listModel.size() - 1) {
@@ -109,17 +173,18 @@ public class ComplexCommandEditorUI extends JFrame {
                     commandList.setSelectedIndex(index + 1);
                 }
             }
-        }));
+        });
+    }
 
-        buttonPanel.add(new JButton(new AbstractAction("Apply") {
+    private JButton createApplyButton() {
+        return new JButton(new AbstractAction("Apply") {
             public void actionPerformed(ActionEvent e) {
                 manager.setCurrentCommand(editor.getCommands(), "Edited Command");
                 JOptionPane.showMessageDialog(null, "Command updated in manager.");
             }
-        }));
-
-        add(buttonPanel, BorderLayout.SOUTH);
+        });
     }
+
 
     private void updateListModel() {
         listModel.clear();
@@ -129,3 +194,4 @@ public class ComplexCommandEditorUI extends JFrame {
     }
 
 }
+
