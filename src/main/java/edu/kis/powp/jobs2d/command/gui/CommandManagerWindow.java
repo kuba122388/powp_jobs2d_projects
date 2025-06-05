@@ -23,7 +23,6 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
 
     private DriverCommandManager commandManager;
     private VisitableJob2dDriver previewDriver;
-    private PointTransformation transformationDecorator;
 
     private JTextArea currentCommandField;
 
@@ -150,8 +149,9 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         drawPanelController = new DrawPanelController();
         drawPanelController.initialize(drawPanel);
 
+        PointTransformation transformation = new ScaleTransformation(.5, .5);
         previewDriver = new LineDriverAdapter(drawPanelController, LineFactory.getBasicLine(), "preview");
-        transformationDecorator = new ScaleTransformation( 3., 3.);
+        previewDriver = new TransformationDriverDecorator(previewDriver, transformation);
 
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
