@@ -31,6 +31,9 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
 
     private DrawPanelController drawPanelController;
 
+    private boolean isCanvaDisplayed = false;
+    private JButton btnDisplayCanva = null;
+
     private CommandHistoryManager commandHistoryManager;
     private JList<CommandHistoryManager.HistoryEntry> commandHistoryList;
     private DefaultListModel<CommandHistoryManager.HistoryEntry> historyListModel;
@@ -130,10 +133,10 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         buttonConstraints.gridy = 5;
         buttonPanel.add(btnRestoreCommand, buttonConstraints);
 
-        JButton btnDisplayWorkspaceWindow = new JButton("Display Workspace Window");
-        btnDisplayWorkspaceWindow.addActionListener((ActionEvent e) -> this.displayWorkspace());
+        btnDisplayCanva = new JButton("Display Workspace Canva (off)");
+        btnDisplayCanva.addActionListener((ActionEvent e) -> this.changeCanvaVisibility());
         buttonConstraints.gridy = 6;
-        buttonPanel.add(btnDisplayWorkspaceWindow, buttonConstraints);
+        buttonPanel.add(btnDisplayCanva, buttonConstraints);
 
         leftConstraints.gridy = 4;
         leftConstraints.weighty = 0.4;
@@ -164,7 +167,17 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         content.add(drawPanel, c);
     }
 
-    private void displayWorkspace(){
+    private void changeCanvaVisibility(){
+        isCanvaDisplayed = !isCanvaDisplayed;
+        if (btnDisplayCanva != null) {
+            btnDisplayCanva.setText(isCanvaDisplayed ? "Display Workspace Canva (on)" : "Display Workspace Canva (off)");
+        }
+        if (isCanvaDisplayed) {
+            displayCanva();
+        }
+    }
+
+    private void displayCanva(){
         CanvaShape currentCanvaShape = WorkspaceFeature.getWorkspaceManager().getCurrentCanvaShape();
         if(currentCanvaShape == null) return;
         currentCanvaShape.draw(workspaceDriver);
@@ -194,7 +207,10 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         DriverCommand currentCommand = commandManager.getCurrentCommand();
 
         if (currentCommand != null) {
-//            clearPanel();
+            clearPanel();
+            if (isCanvaDisplayed) {
+                displayCanva();
+            }
             currentCommand.execute(previewDriver);
         }
     }
@@ -230,11 +246,7 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
     @Override
     public void HideIfVisibleAndShowIfHidden() {
         updateObserverListField();
-        if (this.isVisible()) {
-            this.setVisible(false);
-        } else {
-            this.setVisible(true);
-        }
+        this.setVisible(!this.isVisible());
     }
 
 }
