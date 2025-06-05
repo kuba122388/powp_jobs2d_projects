@@ -1,7 +1,13 @@
 package edu.kis.powp.jobs2d.command.gui;
 
+import edu.kis.legacy.drawer.panel.DrawPanelController;
+import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.jobs2d.command.*;
 import edu.kis.powp.jobs2d.command.manager.DriverCommandManager;
+import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
+import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
+import edu.kis.powp.jobs2d.transformations.ScaleTransformationDecorator;
+import edu.kis.powp.jobs2d.transformations.TransformationDecorator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,11 +18,21 @@ public class ComplexCommandEditorUI extends JFrame {
     private ComplexCommandEditor editor;
     private DefaultListModel<DriverCommand> listModel;
     private JList<DriverCommand> commandList;
+    private DrawPanelController drawPanelController;
+    private VisitableJob2dDriver previewDriver;
+    private TransformationDecorator transformationDecorator;
+    private DriverCommandManager managerClone;
+
 
     public ComplexCommandEditorUI(DriverCommandManager manager) {
         this.manager = manager;
-        this.editor = (manager.getCurrentCommand() instanceof ICompoundCommand)
-                ? new ComplexCommandEditor((ICompoundCommand) manager.getCurrentCommand())
+        try {
+            this.managerClone = (DriverCommandManager) manager.clone();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        this.editor = (managerClone.getCurrentCommand() instanceof ICompoundCommand)
+                ? new ComplexCommandEditor((ICompoundCommand) this.managerClone.getCurrentCommand())
                 : new ComplexCommandEditor();
 
         setupUI();
@@ -28,11 +44,24 @@ public class ComplexCommandEditorUI extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        drawPanelController = new DrawPanelController();
+        JPanel drawPanel = new JPanel();
+        drawPanel.setPreferredSize(new Dimension(600, 300));
+        drawPanelController.initialize(drawPanel);
+
+        previewDriver = new LineDriverAdapter(drawPanelController, LineFactory.getBasicLine(), "preview");
+        transformationDecorator = new ScaleTransformationDecorator(previewDriver, 3.0, 3.0);
+
+
         listModel = new DefaultListModel<>();
         updateListModel();
 
         commandList = new JList<>(listModel);
-        add(new JScrollPane(commandList), BorderLayout.CENTER);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        splitPane.setLeftComponent(new JScrollPane(commandList));
+        splitPane.setRightComponent(drawPanel);
+        splitPane.setResizeWeight(0.3);
+        add(splitPane, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new GridLayout(1, 6));
         buttonPanel.add(createAddButton());
@@ -44,6 +73,7 @@ public class ComplexCommandEditorUI extends JFrame {
 
 
         add(buttonPanel, BorderLayout.SOUTH);
+        previewCommands();
     }
 
     private JButton createAddButton() {
@@ -80,6 +110,7 @@ public class ComplexCommandEditorUI extends JFrame {
                         JOptionPane.showMessageDialog(null, "Invalid input: X and Y must be integers.");
                     }
                 }
+                previewCommands();
             }
         });
     }
@@ -135,6 +166,7 @@ public class ComplexCommandEditorUI extends JFrame {
                         JOptionPane.showMessageDialog(null, "Invalid input: X and Y must be integers.");
                     }
                 }
+                previewCommands();
             }
         });
     }
@@ -146,6 +178,7 @@ public class ComplexCommandEditorUI extends JFrame {
                     editor.removeCommand(index);
                     updateListModel();
                 }
+                previewCommands();
             }
         });
     }
@@ -159,6 +192,7 @@ public class ComplexCommandEditorUI extends JFrame {
                     updateListModel();
                     commandList.setSelectedIndex(index - 1);
                 }
+                previewCommands();
             }
         });
     }
@@ -172,10 +206,19 @@ public class ComplexCommandEditorUI extends JFrame {
                     updateListModel();
                     commandList.setSelectedIndex(index + 1);
                 }
+                previewCommands();
             }
         });
     }
 
+
+
+    private void updateListModel() {
+        listModel.clear();
+        for (DriverCommand cmd : editor.getCommands()) {
+            listModel.addElement(cmd);
+        }
+    }
     private JButton createApplyButton() {
         return new JButton(new AbstractAction("Apply") {
             public void actionPerformed(ActionEvent e) {
@@ -184,12 +227,19 @@ public class ComplexCommandEditorUI extends JFrame {
             }
         });
     }
+    private void previewCommands() {
+        drawPanelController.clearPanel();
+        DriverCommand currentCommand = managerClone.getCurrentCommand();
+        if (currentCommand != null) {
+            clearPanel();
+            managerClone.setCurrentCommand(editor.getCommands(), "Edited Command");
+            currentCommand.execute(previewDriver);
+        }
+    }
 
-
-    private void updateListModel() {
-        listModel.clear();
-        for (DriverCommand cmd : editor.getCommands()) {
-            listModel.addElement(cmd);
+    private void clearPanel() {
+        if (drawPanelController != null) {
+            drawPanelController.clearPanel();
         }
     }
 
