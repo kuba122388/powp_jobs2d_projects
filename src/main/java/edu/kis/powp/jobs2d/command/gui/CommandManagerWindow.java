@@ -118,24 +118,19 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         buttonConstraints.gridy = 2;
         buttonPanel.add(btnClearPanel, buttonConstraints);
 
-        JButton btnPreviewCommand = new JButton("Preview Command");
-        btnPreviewCommand.addActionListener((ActionEvent e) -> this.previewCommand());
-        buttonConstraints.gridy = 3;
-        buttonPanel.add(btnPreviewCommand, buttonConstraints);
-
         JButton btnRefreshHistory = new JButton("Refresh Commands History");
         btnRefreshHistory.addActionListener((ActionEvent e) -> this.updateCommandHistoryField());
-        buttonConstraints.gridy = 4;
+        buttonConstraints.gridy = 3;
         buttonPanel.add(btnRefreshHistory, buttonConstraints);
 
         JButton btnRestoreCommand = new JButton("Restore Selected Command");
         btnRestoreCommand.addActionListener((ActionEvent e) -> this.restoreSelectedCommand());
-        buttonConstraints.gridy = 5;
+        buttonConstraints.gridy = 4;
         buttonPanel.add(btnRestoreCommand, buttonConstraints);
 
         btnDisplayCanva = new JButton("Display Workspace Canva (off)");
         btnDisplayCanva.addActionListener((ActionEvent e) -> this.changeCanvaVisibility());
-        buttonConstraints.gridy = 6;
+        buttonConstraints.gridy = 5;
         buttonPanel.add(btnDisplayCanva, buttonConstraints);
 
         leftConstraints.gridy = 4;
@@ -203,7 +198,7 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         }
     }
 
-    private void previewCommand() {
+    public void previewCommand() {
         DriverCommand currentCommand = commandManager.getCurrentCommand();
 
         if (currentCommand != null) {
