@@ -1,12 +1,13 @@
 package edu.kis.powp.jobs2d.drivers;
 
 import edu.kis.powp.jobs2d.Job2dDriver;
+import edu.kis.powp.jobs2d.drivers.visitors.DriverVisitor;
 
 import javax.swing.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class RealTimeDecoratorDriver implements Job2dDriver {
+public class RealTimeDecoratorDriver implements VisitableJob2dDriver {
     private final JPanel panel;
     private final Queue<Runnable> tasks = new LinkedList<>();
     private static int queuedX = 0;
@@ -80,5 +81,10 @@ public class RealTimeDecoratorDriver implements Job2dDriver {
     }
     public static int getQueuedY() {
         return queuedY;
+    }
+
+    @Override
+    public void accept(DriverVisitor visitor) {
+
     }
 }
