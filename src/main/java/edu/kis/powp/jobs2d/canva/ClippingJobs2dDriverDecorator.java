@@ -3,6 +3,7 @@ package edu.kis.powp.jobs2d.canva;
 import edu.kis.powp.jobs2d.canva.shapes.CanvaShape;
 import edu.kis.powp.jobs2d.drivers.AbstractDecorator;
 import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
+import edu.kis.powp.jobs2d.features.WorkspaceFeature;
 
 /**
  * A {@link VisitableJob2dDriver} decorator that adds optional clipping behavior to constrain
@@ -13,7 +14,6 @@ import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
  * It is designed to be dynamically enabled or disabled via {@link #toggleClipping()} or {@link #setClipping(boolean)}.
  */
 public class ClippingJobs2dDriverDecorator extends AbstractDecorator {
-    private CanvaShape canvaShape;
     private boolean clipping = false;
 
     private int currentX, currentY;
@@ -21,9 +21,6 @@ public class ClippingJobs2dDriverDecorator extends AbstractDecorator {
     public ClippingJobs2dDriverDecorator(VisitableJob2dDriver driver) {
         super(driver);
     }
-
-    public CanvaShape getCanvasShape() { return canvaShape; }
-    public void setCanvaShape(CanvaShape canvaShape) { this.canvaShape = canvaShape; }
 
     public void setDriver(VisitableJob2dDriver driver) { super.driver = driver; }
 
@@ -78,10 +75,11 @@ public class ClippingJobs2dDriverDecorator extends AbstractDecorator {
     }
 
     private int[] clipPointToBounds(int x, int y) {
-        if (canvaShape == null || canvaShape.contains(x, y)) {
+        CanvaShape shape = WorkspaceFeature.getWorkspaceManager().getCurrentCanvaShape();
+        if (shape == null || shape.contains(x, y)) {
             return new int[]{x, y};
         } else {
-            return canvaShape.clipLine(currentX,  currentY, x, y);
+            return shape.clipLine(currentX,  currentY, x, y);
         }
     }
 }
