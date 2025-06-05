@@ -15,13 +15,18 @@ import edu.kis.powp.jobs2d.command.manager.CommandHistoryManager;
 import edu.kis.powp.jobs2d.command.manager.DriverCommandManager;
 import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
+import edu.kis.powp.jobs2d.transformations.PointTransformation;
+import edu.kis.powp.jobs2d.transformations.ScaleTransformation;
+import edu.kis.powp.jobs2d.transformations.TransformationDriverDecorator;
 import edu.kis.powp.jobs2d.features.WorkspaceFeature;
+
 import edu.kis.powp.observer.Subscriber;
 
 public class CommandManagerWindow extends JFrame implements WindowComponent {
 
     private DriverCommandManager commandManager;
     private VisitableJob2dDriver previewDriver;
+
     private VisitableJob2dDriver workspaceDriver;
 
     private JTextArea currentCommandField;
@@ -152,7 +157,10 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         drawPanelController = new DrawPanelController();
         drawPanelController.initialize(drawPanel);
 
+        PointTransformation transformation = new ScaleTransformation(.5, .5);
         previewDriver = new LineDriverAdapter(drawPanelController, LineFactory.getBasicLine(), "preview");
+        previewDriver = new TransformationDriverDecorator(previewDriver, transformation);
+      
         workspaceDriver = new LineDriverAdapter(drawPanelController, LineFactory.getDottedLine(), "workspacePreview");
 
         c.fill = GridBagConstraints.BOTH;
