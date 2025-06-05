@@ -4,8 +4,6 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -149,7 +147,6 @@ public class TestJobs2dApp {
                 commandManager);
 
         CommandsFeature.getDriverCommandManager().getChangePublisher().addSubscriber(windowObserver);
-        application.addTest("Transform current command", new TransformCurrentCommandOptionListener());
         CommandsFeature.getDriverCommandManager().getChangePublisher().addSubscriber(commandHistoryManager);
     }
 
