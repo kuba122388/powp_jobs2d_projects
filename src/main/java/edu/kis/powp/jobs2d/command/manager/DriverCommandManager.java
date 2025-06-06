@@ -13,7 +13,7 @@ import edu.kis.powp.observer.Publisher;
 /**
  * Driver command Manager.
  */
-public class DriverCommandManager {
+public class DriverCommandManager implements Cloneable {
     private DriverCommand currentCommand = null;
 
     private Publisher changePublisher = new Publisher();
@@ -86,4 +86,8 @@ public class DriverCommandManager {
         return changePublisher;
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }
