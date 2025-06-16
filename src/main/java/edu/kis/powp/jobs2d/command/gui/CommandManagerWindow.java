@@ -1,13 +1,25 @@
 package edu.kis.powp.jobs2d.command.gui;
 
-import java.awt.*;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.swing.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
 
 import edu.kis.legacy.drawer.panel.DrawPanelController;
 import edu.kis.legacy.drawer.shape.LineFactory;
@@ -19,16 +31,16 @@ import edu.kis.powp.jobs2d.command.manager.CommandHistoryManager;
 import edu.kis.powp.jobs2d.command.manager.ICommandManager;
 import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
+import edu.kis.powp.jobs2d.features.WorkspaceFeature;
 import edu.kis.powp.jobs2d.transformations.PointTransformation;
 import edu.kis.powp.jobs2d.transformations.ScaleTransformation;
 import edu.kis.powp.jobs2d.transformations.TransformationDriverDecorator;
-import edu.kis.powp.jobs2d.features.WorkspaceFeature;
 import edu.kis.powp.observer.Subscriber;
 
 public class CommandManagerWindow extends JFrame implements WindowComponent {
 
     private final ICommandManager commandManager;
-    private final VisitableJob2dDriver previewDriver;
+    private VisitableJob2dDriver previewDriver;
 
     private final VisitableJob2dDriver workspaceDriver;
 
@@ -49,8 +61,7 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
      */
     private static final long serialVersionUID = 9204679248304669948L;
 
-    public CommandManagerWindow(ICommandManager commandManager, CommandHistoryManager commandHistoryManager)
-    {
+    public CommandManagerWindow(ICommandManager commandManager, CommandHistoryManager commandHistoryManager) {
         this.setTitle("Command Manager");
         this.setSize(600, 400);
         Container content = this.getContentPane();
@@ -139,12 +150,12 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         btnRestoreCommand.addActionListener((ActionEvent e) -> this.restoreSelectedCommand());
         buttonConstraints.gridy = 4;
         buttonPanel.add(btnRestoreCommand, buttonConstraints);
-      
+
         JButton btnDisplayCanva = new JButton("Display Workspace Canva (off)");
         btnDisplayCanva.addActionListener((ActionEvent e) -> this.changeCanvasVisibility());
         buttonConstraints.gridy = 5;
         buttonPanel.add(btnDisplayCanva, buttonConstraints);
-      
+
         JButton btnEditCommand = new JButton("Edit Current Command");
         btnEditCommand.addActionListener((ActionEvent e) -> this.editCurrentCommand());
         buttonConstraints.gridy = 6;
@@ -182,21 +193,21 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         content.add(drawPanel, c);
     }
 
-    private void runCommand(){
-        if (commandManager.getCurrentCommand() == null) return;
+    private void runCommand() {
+        if (commandManager.getCurrentCommand() == null)
+            return;
         commandManager.runCommand();
     }
 
     private void toggleButtons(JButton button) {
         clearButtonListeners(button);
-        if(Objects.equals(button.getText(), "Delete observers")) {
+        if (Objects.equals(button.getText(), "Delete observers")) {
             button.setText("Reset observers");
             button.addActionListener((ActionEvent e) -> {
                 this.resetObservers();
                 this.toggleButtons(button);
             });
-        }
-        else{
+        } else {
             button.setText("Delete observers");
             button.addActionListener((ActionEvent e) -> {
                 this.deleteObservers();
@@ -212,16 +223,17 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         updateObserverListField();
     }
 
-    private void changeCanvasVisibility(){
+    private void changeCanvasVisibility() {
         isCanvasDisplayed = !isCanvasDisplayed;
         if (isCanvasDisplayed) {
             displayCanvas();
         }
     }
 
-    private void displayCanvas(){
+    private void displayCanvas() {
         CanvaShape currentCanvaShape = WorkspaceFeature.getWorkspaceManager().getCurrentCanvaShape();
-        if(currentCanvaShape == null) return;
+        if (currentCanvaShape == null)
+            return;
         currentCanvaShape.draw(workspaceDriver);
     }
 
@@ -303,10 +315,8 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
         DriverCommand current = commandManager.getCurrentCommand();
 
         if (!(current instanceof ICompoundCommand)) {
-            JOptionPane.showMessageDialog(this,
-                    "Current command is not a complex (compound) command.",
-                    "Edit Not Allowed",
-                    JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Current command is not a complex (compound) command.",
+                    "Edit Not Allowed", JOptionPane.WARNING_MESSAGE);
             return;
         }
 

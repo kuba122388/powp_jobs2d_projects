@@ -1,15 +1,14 @@
 package edu.kis.powp.jobs2d.transformations;
 
-import edu.kis.powp.jobs2d.Job2dDriver;
+import edu.kis.powp.jobs2d.drivers.AbstractDecorator;
 import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
-import edu.kis.powp.jobs2d.drivers.visitors.DriverVisitor;
 
-public class TransformationDriverDecorator implements VisitableJob2dDriver {
-    private final VisitableJob2dDriver driver;
+public class TransformationDriverDecorator extends AbstractDecorator {
+
     private final PointTransformation transformation;
 
     public TransformationDriverDecorator(VisitableJob2dDriver driver, PointTransformation transformation) {
-        this.driver = driver;
+        super(driver);
         this.transformation = transformation;
     }
 
@@ -28,10 +27,5 @@ public class TransformationDriverDecorator implements VisitableJob2dDriver {
     @Override
     public String toString() {
         return driver.toString() + " [Transformed: " + transformation.getName() + "]";
-    }
-
-    @Override
-    public void accept(DriverVisitor visitor) {
-
     }
 }

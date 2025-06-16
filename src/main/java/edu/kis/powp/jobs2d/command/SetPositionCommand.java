@@ -33,27 +33,22 @@ public class SetPositionCommand implements DriverCommand {
     }
 
     @Override
-    public DriverCommand copy(){
-        return new SetPositionCommand(this.posX,this.posY);
+    public DriverCommand copy() {
+        return new SetPositionCommand(this.posX, this.posY);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SetPositionCommand)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof SetPositionCommand))
+            return false;
 
         SetPositionCommand second = (SetPositionCommand) o;
 
-        if (posX != second.posX) return false;
+        if (posX != second.posX)
+            return false;
         return posY == second.posY;
-    }
-
-    public int getX() {
-        return posX;
-    }
-
-    public int getY() {
-        return posY;
     }
 
     @Override
@@ -61,4 +56,3 @@ public class SetPositionCommand implements DriverCommand {
         visitor.visit(this);
     }
 }
-
