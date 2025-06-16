@@ -1,38 +1,50 @@
 package edu.kis.powp.jobs2d.command.gui;
 
-import edu.kis.legacy.drawer.panel.DrawPanelController;
-import edu.kis.legacy.drawer.shape.LineFactory;
-import edu.kis.powp.jobs2d.command.*;
-import edu.kis.powp.jobs2d.command.manager.DriverCommandManager;
-import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
-import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
-import edu.kis.powp.jobs2d.transformations.ScaleTransformationDecorator;
-import edu.kis.powp.jobs2d.transformations.TransformationDecorator;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextField;
+
+import edu.kis.legacy.drawer.panel.DrawPanelController;
+import edu.kis.legacy.drawer.shape.LineFactory;
+import edu.kis.powp.jobs2d.command.ComplexCommandEditor;
+import edu.kis.powp.jobs2d.command.DriverCommand;
+import edu.kis.powp.jobs2d.command.ICompoundCommand;
+import edu.kis.powp.jobs2d.command.ImmutableComplexCommand;
+import edu.kis.powp.jobs2d.command.OperateToCommand;
+import edu.kis.powp.jobs2d.command.SetPositionCommand;
+import edu.kis.powp.jobs2d.command.manager.ICommandManager;
+import edu.kis.powp.jobs2d.drivers.VisitableJob2dDriver;
+import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
+
 public class ComplexCommandEditorUI extends JFrame {
-    private final DriverCommandManager manager;
+
+    private ICommandManager manager;
     private ComplexCommandEditor editor;
     private DefaultListModel<DriverCommand> listModel;
     private JList<DriverCommand> commandList;
     private DrawPanelController drawPanelController;
     private VisitableJob2dDriver previewDriver;
-    private TransformationDecorator transformationDecorator;
-    private DriverCommandManager managerClone;
 
-
-    public ComplexCommandEditorUI(DriverCommandManager manager) {
+    public ComplexCommandEditorUI(ICommandManager manager) {
         this.manager = manager;
-        try {
-            this.managerClone = (DriverCommandManager) manager.clone();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        this.editor = (managerClone.getCurrentCommand() instanceof ICompoundCommand)
-                ? new ComplexCommandEditor((ICompoundCommand) this.managerClone.getCurrentCommand())
+
+        this.editor = (manager.getCurrentCommand() instanceof ICompoundCommand)
+                ? new ComplexCommandEditor((ICompoundCommand) this.manager.getCurrentCommand())
                 : new ComplexCommandEditor();
 
         setupUI();
@@ -50,8 +62,6 @@ public class ComplexCommandEditorUI extends JFrame {
         drawPanelController.initialize(drawPanel);
 
         previewDriver = new LineDriverAdapter(drawPanelController, LineFactory.getBasicLine(), "preview");
-        transformationDecorator = new ScaleTransformationDecorator(previewDriver, 3.0, 3.0);
-
 
         listModel = new DefaultListModel<>();
         updateListModel();
@@ -71,7 +81,6 @@ public class ComplexCommandEditorUI extends JFrame {
         buttonPanel.add(createMoveDownButton());
         buttonPanel.add(createApplyButton());
 
-
         add(buttonPanel, BorderLayout.SOUTH);
         previewCommands();
     }
@@ -82,7 +91,7 @@ public class ComplexCommandEditorUI extends JFrame {
                 JPanel panel = new JPanel();
                 panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-                JComboBox<String> commandType = new JComboBox<>(new String[]{"SetPosition", "OperateTo"});
+                JComboBox<String> commandType = new JComboBox<>(new String[] { "SetPosition", "OperateTo" });
                 JTextField inputX = new JTextField(5);
                 JTextField inputY = new JTextField(5);
 
@@ -93,8 +102,8 @@ public class ComplexCommandEditorUI extends JFrame {
                 panel.add(new JLabel("Y:"));
                 panel.add(inputY);
 
-                int result = JOptionPane.showConfirmDialog(null, panel, "Add Command",
-                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                int result = JOptionPane.showConfirmDialog(null, panel, "Add Command", JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.PLAIN_MESSAGE);
 
                 if (result == JOptionPane.OK_OPTION) {
                     try {
@@ -114,11 +123,13 @@ public class ComplexCommandEditorUI extends JFrame {
             }
         });
     }
+
     private JButton createEditButton() {
         return new JButton(new AbstractAction("Edit") {
             public void actionPerformed(ActionEvent e) {
                 int index = commandList.getSelectedIndex();
-                if (index == -1) return;
+                if (index == -1)
+                    return;
 
                 DriverCommand selected = listModel.get(index);
                 if (!(selected instanceof SetPositionCommand || selected instanceof OperateToCommand)) {
@@ -137,7 +148,6 @@ public class ComplexCommandEditorUI extends JFrame {
                     currentY = otc.getY();
                 }
 
-
                 JTextField inputX = new JTextField(String.valueOf(currentX));
                 JTextField inputY = new JTextField(String.valueOf(currentY));
                 JPanel panel = new JPanel();
@@ -147,8 +157,8 @@ public class ComplexCommandEditorUI extends JFrame {
                 panel.add(new JLabel("Y:"));
                 panel.add(inputY);
 
-                int result = JOptionPane.showConfirmDialog(null, panel, "Edit Command",
-                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                int result = JOptionPane.showConfirmDialog(null, panel, "Edit Command", JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.PLAIN_MESSAGE);
 
                 if (result == JOptionPane.OK_OPTION) {
                     try {
@@ -170,6 +180,7 @@ public class ComplexCommandEditorUI extends JFrame {
             }
         });
     }
+
     private JButton createRemoveButton() {
         return new JButton(new AbstractAction("Remove") {
             public void actionPerformed(ActionEvent e) {
@@ -211,14 +222,13 @@ public class ComplexCommandEditorUI extends JFrame {
         });
     }
 
-
-
     private void updateListModel() {
         listModel.clear();
         for (DriverCommand cmd : editor.getCommands()) {
             listModel.addElement(cmd);
         }
     }
+
     private JButton createApplyButton() {
         return new JButton(new AbstractAction("Apply") {
             public void actionPerformed(ActionEvent e) {
@@ -227,12 +237,12 @@ public class ComplexCommandEditorUI extends JFrame {
             }
         });
     }
+
     private void previewCommands() {
         drawPanelController.clearPanel();
-        DriverCommand currentCommand = managerClone.getCurrentCommand();
+        DriverCommand currentCommand = new ImmutableComplexCommand(editor.getCommands());
         if (currentCommand != null) {
             clearPanel();
-            managerClone.setCurrentCommand(editor.getCommands(), "Edited Command");
             currentCommand.execute(previewDriver);
         }
     }
@@ -244,4 +254,3 @@ public class ComplexCommandEditorUI extends JFrame {
     }
 
 }
-

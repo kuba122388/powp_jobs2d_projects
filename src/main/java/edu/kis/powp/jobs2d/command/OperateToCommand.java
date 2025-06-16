@@ -33,27 +33,22 @@ public class OperateToCommand implements DriverCommand {
     }
 
     @Override
-    public DriverCommand copy(){
-        return new OperateToCommand(this.posX,this.posY);
+    public DriverCommand copy() {
+        return new OperateToCommand(this.posX, this.posY);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof OperateToCommand)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof OperateToCommand))
+            return false;
 
         OperateToCommand second = (OperateToCommand) o;
 
-        if (posX != second.posX) return false;
+        if (posX != second.posX)
+            return false;
         return posY == second.posY;
-    }
-
-    public int getX() {
-        return posX;
-    }
-
-    public int getY() {
-        return posY;
     }
 
     @Override
