@@ -43,7 +43,7 @@ public class FeatureManager {
 
     private static List<FeaturePlugin> resolveDependencies() throws DependencyException {
         Map<String, FeaturePlugin> featureMap = createFeatureMap();
-        Map<String, Set<String>> dependencies = buildFeaturesDependencies();
+        Map<String, Set<String>> dependencies = buildFeaturesDependencies(featureMap);
 
         validateDependencies(featureMap, dependencies);
 
@@ -53,22 +53,23 @@ public class FeatureManager {
     private static Map<String, FeaturePlugin> createFeatureMap() {
         Map<String, FeaturePlugin> featureMap = new HashMap<>();
         for (FeaturePlugin plugin : plugins) {
-            String featureName = plugin.getClass().getSimpleName();
+            String featureName = plugin.getFeatureName();
             featureMap.put(featureName, plugin);
         }
         return featureMap;
     }
 
-    private static Map<String, Set<String>> buildFeaturesDependencies() {
+    private static Map<String, Set<String>> buildFeaturesDependencies(Map<String, FeaturePlugin> featureMap) {
         Map<String, Set<String>> dependencies = new HashMap<>();
 
-        Set<String> workspaceDependencies = new HashSet<>();
-        workspaceDependencies.add("DriverFeature");
-        workspaceDependencies.add("DrawerFeature");
-        dependencies.put("WorkspaceFeature", workspaceDependencies);
-        dependencies.put("DriverFeature", new HashSet<>());
-        dependencies.put("DrawerFeature", new HashSet<>());
-        dependencies.put("CommandsFeature", new HashSet<>());
+        for (FeaturePlugin plugin : featureMap.values()) {
+            String featureName = plugin.getFeatureName();
+            String[] featureDependencies = plugin.getDependencies();
+
+            Set<String> dependencySet = new HashSet<>(Arrays.asList(featureDependencies));
+
+            dependencies.put(featureName, dependencySet);
+        }
 
         System.out.println("Built Features dependenceies: " + dependencies);
         return dependencies;
